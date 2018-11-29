@@ -1,0 +1,16 @@
+escape ^Tt
+term screen-256color
+bind c screen 1
+bind ^c screen 1
+bind 0 select 10
+bind s split -v
+bind o focus
+hardstatus off
+hardstatus alwayslastline
+shelltitle ') |fish'
+hardstatus string '%{= kG} %{G}%H %= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{B} %m-%d %{W} %c'
+;hardstatus string "%{= KW} %H [%`] %{= Kw}|%{-} %-Lw%{= bW}%n%f %t%{-}%+Lw %=%C%a %Y-%M-%d"
+startup_message off
+termcapinfo xterm* ti@:te@:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l
+vbell off
+screen 1

@@ -1,0 +1,1355 @@
+#+TITLE: Talyz' Emacs Config
+
+* Initialization
+** Package sources and init
+
+   Add MELPA and the https version of elpa to the package sources,
+   then initialize.
+
+   This should preferrably be done in the init-file,
+   before this file is loaded, to allow for byte-compiling.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (require 'package)
+     (setq-default package-archives
+                   '(("gnu" . "https://elpa.gnu.org/packages/")
+                     ("melpa" . "https://melpa.org/packages/")))
+
+     (setq-default package-enable-at-startup nil)
+     (package-initialize)   
+
+   #+end_src
+
+** Set up use-package, install if missing
+
+   use-package is a handy macro for keeping track of installed
+   packages and installing them if they're missing. It also structures
+   configuration of the package and can defer loading until the
+   package is actually used.
+
+   This should preferrably be done in the init-file,
+   before this file is loaded, to allow for byte-compiling.   
+
+   #+begin_src emacs-lisp :tangle no
+
+     (unless (package-installed-p 'use-package)
+       (progn
+         (package-refresh-contents)
+         (package-install 'use-package)))
+
+     (require 'use-package)
+
+   #+end_src
+
+** CL
+   
+   Require cl for extended functionality from common lisp used in
+   various places.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package cl)
+
+   #+end_src
+
+   
+* Utils
+** Webpaste
+
+   Webpaste lets you paste a region or the whole buffer to a
+   pastebin-like service. The services are customizable and fallbacks
+   are used if the preferred service is unavailable.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package webpaste
+       :ensure t
+       :bind (("C-c C-p C-b" . webpaste-paste-buffer)
+              ("C-c C-p C-r" . webpaste-paste-region)))
+
+   #+end_src
+
+** YASnippet
+
+   YASnippet is a template system for Emacs. It allows you to type an
+   abbreviation and automatically expand it into function templates.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package yasnippet
+       :ensure
+       :demand
+       ;;:delight yas-minor-mode
+       :config (yas-global-mode 1))
+
+     (use-package yasnippet-snippets
+       :ensure
+       :after yasnippet
+       :config (yasnippet-snippets-initialize))
+
+     (use-package ivy-yasnippet
+       :ensure
+       :after yasnippet)
+
+   #+end_src
+
+** Popup
+
+   Provides the ability to show tooltips and menus, etc.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package popup
+       :ensure t)
+
+   #+end_src
+
+** Undo-tree
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package undo-tree
+       :ensure t
+       :demand
+       :bind ("C-M--" . undo-tree-switch-branch)
+       :config (global-undo-tree-mode))
+
+   #+end_src
+
+** Multiple cursors
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (defvar multiple-cursors-keymap (make-sparse-keymap))
+
+     (use-package multiple-cursors
+       :ensure t
+       :bind-keymap ("C-t" . multiple-cursors-keymap)
+       :bind (:map multiple-cursors-keymap
+                   ("C-s" . mc--mark-symbol-at-point)
+                   ("C-w" . mark-word)
+                   ("C-n" . mc/mark-next-like-this)
+                   ("C-p" . mc/mark-previous-like-this)
+                   ("n" . mc/mark-next-like-this-symbol)
+                   ("p" . mc/mark-previous-like-this-symbol)
+                   ("C-a" . 'mc/mark-all-like-this)))
+
+   #+end_src
+
+** Magit
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package magit
+       :ensure t
+       :bind (("C-M-g" . magit-dispatch-popup)
+              ("C-c g" . magit-status)))
+
+   #+end_src
+
+
+* Behaviour
+** Disable tool bar
+
+   Disable the tool bar at the top - it takes up screen space and I
+   never use it.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (tool-bar-mode 0)
+
+   #+end_src
+
+** Disable scroll bar
+
+   Disable the scroll bar in X / Wayland - I don't need or use it.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (scroll-bar-mode -1)
+
+   #+end_src
+
+** Enable electric pairs
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (electric-pair-mode)
+
+   #+end_src
+
+** Disable bell
+
+   Disable the annoying beeping sound emacs makes to get your
+   attention.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (setq-default ring-bell-function 'ignore)
+       	
+   #+end_src
+
+** Always use space instead of tabs
+
+   Always indent using space instead of tabs.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (setq-default indent-tabs-mode nil)
+
+   #+end_src
+
+** Backup and auto-save files
+
+   #+begin_src emacs-lisp :tangle yes
+
+     ;; don't clobber symlinks
+     (setq backup-by-copying t)
+
+     ;; don't litter my fs tree
+     (setq backup-directory-alist
+           '(("." . "~/.emacs.d/backups")))
+
+     ;; use versioned backups
+     (setq delete-old-versions t)
+     (setq kept-new-versions 6)
+     (setq kept-old-versions 2)
+     (setq version-control t)
+
+     (setq auto-save-file-name-transforms
+           '((".*" "~/.emacs.d/auto-saves/" t)))
+
+   #+end_src
+
+** Prettify symbols
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (defun update-prettify-alist ()
+       (push '(">=" . (?\s (Br . Bl) ?\s (Bc . Bc) ?≥)) prettify-symbols-alist)
+       (push '("<=" . (?\s (Br . Bl) ?\s (Bc . Bc) ?≤)) prettify-symbols-alist)
+       (push '("->" . (?\s (Br . Bl) ?\s (Bc . Bc) ?→)) prettify-symbols-alist)
+       (push '("::" . (?\s (Br . Bl) ?\s (Bc . Bc) ?∷)) prettify-symbols-alist))
+
+     (use-package prog-mode
+       :config
+       (global-prettify-symbols-mode 1)
+       (add-hook 'c++-mode-hook 'update-prettify-alist)
+       (setq prettify-symbols-unprettify-at-point 'right-edge))
+
+   #+end_src
+
+** Enable region casing
+
+   Enable the normally disabled upcase- and downcase-region functions.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (put 'upcase-region 'disabled nil)
+     (put 'downcase-region 'disabled nil)
+   
+   #+end_src
+
+** Scrolling
+
+   Emacs normally scrolls half a page when you reach the bottom. This
+   feels jerky and a bit confusing. Mouse wheel scrolling is also way
+   too agressive.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     ;; scroll one line at a time (less "jumpy" than defaults)
+
+     (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))) ;; three line at a time
+     (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+     (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+     (setq scroll-conservatively 101) ;; keyboard scroll one line at a time
+
+     ;; (use-package smooth-scrolling
+     ;;   :ensure t
+     ;;   :demand
+     ;;   :config
+     ;;   (progn
+     ;;     (setq-default smooth-scroll-margin 2)
+     ;;     (smooth-scrolling-mode 1)))
+
+   #+end_src
+
+** Beginning of line
+
+   C-a is revised to go to first char of the line, ignoring initial
+   whitespace and on second run go to the real begining of the line.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (defun smarter-move-beginning-of-line (arg)
+       "Move point back to indentation of beginning of line.
+
+     Move point to the first non-whitespace character on this line.
+     If point is already there, move to the beginning of the line.
+     Effectively toggle between the first non-whitespace character and
+     the beginning of the line.
+
+     If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+     point reaches the beginning or end of the buffer, stop there."
+       (interactive "^p")
+       (setq arg (or arg 1))
+
+       ;; Move lines first
+       (when (/= arg 1)
+         (let ((line-move-visual nil))
+           (forward-line (1- arg))))
+
+       (let ((orig-point (point)))
+         (back-to-indentation)
+         (when (= orig-point (point))
+           (move-beginning-of-line 1))))
+
+     ;; remap C-a to `smarter-move-beginning-of-line'
+     (global-set-key [remap move-beginning-of-line]
+                     'smarter-move-beginning-of-line)
+
+   #+end_src
+
+** Save place
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (require 'saveplace)
+     (setq-default save-place t)
+
+   #+end_src
+** Disable the start screen
+
+#+begin_src emacs-lisp :tangle yes
+
+  (setq-default inhibit-startup-screen t)
+
+#+end_src
+** Set org-mode as the default mode for the scratch buffer
+
+   #+begin_src emacs-lisp :tangle no
+
+     (setq-default initial-major-mode 'org-mode)
+
+   #+end_src
+
+** Highlight current line
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (global-hl-line-mode 1)
+        
+   #+end_src
+
+** Calendar week start
+   
+   Set the calendar week start day to monday; default is sunday.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (setq calendar-week-start-day 1)
+	
+   #+end_src
+** Always close temporary buffers
+
+   Close the buffer when quit-window is called, instead of burying
+   it. This applies to for example help buffers, debug buffer, etc.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (advice-add 'quit-window
+		 :around (lambda (orig-fun &rest r)
+			   (apply orig-fun '(t))))
+
+   #+end_src
+
+** Winner
+
+   Enable winner-mode which lets us undo and redo window configuration
+   changes with C-c <left> (undo) and C-c <right> (redo).
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (when (fboundp 'winner-mode)
+       (winner-mode 1))
+	
+   #+end_src
+
+** Delight
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package delight
+       :ensure t)
+
+   #+end_src
+   
+** Sr-Speedbar
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package sr-speedbar
+       :ensure t
+       :config
+       (setq sr-speedbar-right-side nil)
+       (setq sr-speedbar-auto-refresh nil)
+       (setq speedbar-show-unknown-files t)
+       (remove-hook 'speedbar-timer-hook 'sr-speedbar-refresh))
+
+   #+end_src
+
+** Projectile
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package projectile
+       :ensure t
+       :bind-keymap ("C-c p" . projectile-command-map)
+       ;;:delight '(:eval (concat " " (projectile-project-name)))
+       :config
+       (setq projectile-completion-system 'ivy)
+       (projectile-mode 1))
+
+   #+end_src
+
+** Ace-Window
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package ace-window
+       :ensure t
+       :bind (("M-2" . ace-window)
+              ("M-o" . ace-window)
+              ([remap other-window] . ace-window))
+       :config
+
+       (setq aw-keys '(?a ?o ?e ?u ?h ?t ?n ?s))
+
+       ;; (defun aw-select-buffer-helm (window)
+       ;;   (aw-switch-to-window window)
+       ;;   (helm-mini)
+       ;;   (aw-flip-window))
+
+       (setq aw-dispatch-alist
+             '((?0 aw-delete-window " Ace - Delete Window")
+               (?x aw-swap-window " Ace - Swap Window")
+               ;(?b aw-select-buffer-helm " Select Buffer With Helm")
+               (?w aw-split-window-fair " Ace - Split Fair Window")
+               (?2 aw-split-window-vert " Ace - Split Vert Window")
+               (?3 aw-split-window-horz " Ace - Split Horz Window")
+               (?1 delete-other-windows " Ace - Maximize Window")))
+       (setq aw-dispatch-always t)
+
+       (defun aw-keep-focus (orig-fun window)
+         (aw-switch-to-window window)
+         (funcall orig-fun window)
+         (aw-flip-window))
+
+       (advice-add 'aw-split-window-fair :around 'aw-keep-focus)
+       (advice-add 'aw-split-window-horz :around 'aw-keep-focus)
+       (advice-add 'aw-split-window-vert :around 'aw-keep-focus))
+
+   #+end_src
+
+** Helm
+   
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package helm-mode
+       :ensure helm
+       ;;:delight helm-mode
+       :bind (("C-x C-f" . helm-find-files)
+              ("M-x" . helm-M-x)
+              ("C-x b" . helm-mini)
+              ("C-x C-b" . helm-mini)
+              ("M-y" . helm-show-kill-ring)
+              :map helm-map
+              ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+              ("C-i" . helm-execute-persistent-action) ; make TAB work in terminal
+              ("C-z" . helm-select-action) ; list actions using C-z
+              )
+       :config (progn (helm-mode 1)
+                      (setq helm-split-window-in-side-p t)
+                      (setq helm-mode-fuzzy-match t)
+                      (setq helm-completion-in-region-fuzzy-match t)
+                      ;; (mapcar (lambda (args)
+                      ;;           (face-spec-reset-face (car args))
+                      ;;           (apply 'set-face-attribute args))
+                      ;;         '((helm-buffer-directory nil :foreground "blue")
+                      ;;           (helm-ff-directory nil :foreground "deep sky blue")
+                      ;;           (helm-ff-dotted-directory nil :foreground "gray")
+                      ;;           (helm-ff-dotted-symlink-directory nil :foreground "DarkOrange")
+                      ;;           (helm-ff-invalid-symlink nil :foreground "red")
+                      ;;           (helm-ff-prefix nil :foreground "yellow")
+                      ;;           (helm-source-header nil :foreground "gray84" :weight semi-bold :height 1.3)
+                      ;;           (helm-visible-mark nil :background "royal blue" :foreground "gray94")))
+                      ))
+
+   #+end_src
+
+** Ivy
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package flx
+       :ensure t)
+
+     (use-package ivy
+       :ensure t
+       ;;:delight ivy-mode
+       :bind (([remap switch-to-buffer] . ivy-switch-buffer)
+              ([remap list-buffers] . ivy-switch-buffer)
+              :map ivy-minibuffer-map
+              ([remap ivy-partial-or-done] . ivy-alt-done))
+       :config
+       (setq ivy-use-virtual-buffers t)
+       (setq enable-recursive-minibuffers t)
+       (setq ivy-count-format "(%d/%d) ")
+       (setq ivy-wrap t)
+       (setq ivy-height 20)
+       (setq ivy-re-builders-alist
+             '((swiper . ivy--regex-plus)
+               (t . ivy--regex-fuzzy)))
+       ;; (ivy-mode 1)
+       ;; (face-spec-reset-face 'ivy-current-match)
+       ;; (apply 'set-face-attribute '(ivy-current-match nil ;; :foreground "#c678dd"
+       ;;                                                :background "#48384c"))
+       (ivy-rich-mode 1))
+
+     (use-package swiper
+       :ensure t
+       :bind (([remap isearch-forward] . swiper)
+              ([remap isearch-backward] . swiper)
+              ([remap isearch-forward-regexp] . swiper-all)
+              ([remap isearch-backward-regexp] . swiper-all)))
+
+     (use-package counsel
+       :ensure t
+       :bind (([remap find-file] . counsel-find-file)
+              ([remap execute-extended-command] . counsel-M-x)
+              ([remap describe-function] . counsel-describe-function)
+              ([remap describe-variable] . counsel-describe-variable)
+              ([remap find-library] . counsel-find-library)
+              ("C-c a" . counsel-ag))
+       :config
+       (ivy-rich-mode 1)
+       (ivy-rich-mode 0)
+       (ivy-rich-mode 1))
+
+     (use-package ivy-rich
+       :ensure t)
+
+   #+end_src
+
+
+* Security
+
+  Security related settings, such as network connection security..
+
+  #+begin_src emacs-lisp :tangle yes
+
+    (setq network-security-level 'high)
+
+  #+end_src
+
+
+* Configuration files
+** Associate some missing config file extensions with conf-mode
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (add-to-list 'auto-mode-alist '("\\.ovpn\\'" . conf-mode))
+
+   #+end_src
+
+** Systemd Mode
+
+   Major mode for editing systemd units in GNU Emacs. Provides
+   highlighting and completions.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package systemd
+       :defer t
+       :ensure t)
+
+   #+end_src
+
+
+* Programming
+** Highlight parentheses
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (show-paren-mode 1)
+	
+   #+end_src
+
+** Highlight symbol
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package highlight-symbol
+       :ensure t
+       ;;:delight highlight-symbol-mode
+       :hook ((c-mode c++-mode python-mode emacs-lisp-mode) . highlight-symbol-mode)
+       :config (progn (setq highlight-symbol-idle-delay 0.5)
+                      (setq highlight-symbol-highlight-single-occurrence nil)))
+
+   #+end_src
+
+** Flycheck
+
+   Flycheck is a modern on-the-fly syntax checking extension for GNU
+   Emacs, intended as replacement for the older Flymake extension
+   which is part of GNU Emacs.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package flycheck
+       :ensure t
+       :demand
+       ;;:delight flycheck-mode
+       :config (progn (global-flycheck-mode)
+                      (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+                      (setq-default flycheck-idle-change-delay 2)))
+
+   #+end_src
+
+   Show errors under point in pos-tip popups.
+   
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package flycheck-pos-tip
+       :ensure t
+       :commands flycheck-pos-tip-mode
+       :init (with-eval-after-load 'flycheck
+               (flycheck-pos-tip-mode))
+       :config (setq flycheck-pos-tip-timeout -1))
+
+   #+end_src
+
+** CC-Mode
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package cc-mode
+       :defer t
+       :config (progn (font-lock-add-keywords 'c++-mode
+                                              `(;; (,(concat
+                                                ;;    "\\<[_a-zA-Z][_a-zA-Z0-9]*\\>" ; Object identifier
+                                                ;;    "\\s *"  ; Optional white space
+                                                ;;    "\\(?:\\.\\|->\\)" ; Member access
+                                                ;;    "\\s *"  ; Optional white space
+                                                ;;    ;; "\\<\\([_a-zA-Z][_a-zA-Z0-9]*\\)\\>" ; Member identifier
+                                                ;;    "\\<\\([_a-zA-Z]\\w*\\)\\>" ; Member identifier
+                                                ;;    "\\s *"   ; Optional white space
+                                                ;;    "(")      ; Paren for method invocation
+                                                ;;  1 'font-lock-function-name-face)
+                                                (,(concat "\\<\\([_a-zA-Z]\\w*\\)\\>"
+                                                          "\\s *"
+                                                          "\\(?:<\\(?:[_a-zA-Z]\\w*::\\)*[_a-zA-Z]\\w*>\\)*"
+                                                          "\\s *"
+                                                          "(")
+                                                 1 'font-lock-function-name-face))
+                                              t)
+                      (add-hook 'c-mode-common-hook (lambda ()
+                                                      (c-toggle-auto-hungry-state 1)
+                                                      (setq indent-tabs-mode nil)))
+                      (defconst my-cc-style
+                        '("bsd"
+                          (c-basic-offset . 4)
+                          (c-offsets-alist . ((innamespace . [0])))))
+                      (c-add-style "my-cc-style" my-cc-style)
+                      (setq c-default-style "my-cc-style")))
+
+   #+end_src
+
+** CMake-Mode
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package cmake-mode
+       :ensure t)
+
+     (use-package cmake-font-lock
+       :ensure t
+       :hook (cmake-mode . cmake-font-lock-activate))
+
+   #+end_src
+
+** Compile
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (global-set-key (kbd "<f5>") (lambda ()
+                                    (interactive)
+                                    (setq-local compilation-read-command nil)
+                                    (setq-local compile-command "make -j4 -C build")
+                                    (call-interactively 'compile)))
+
+
+   #+end_src
+
+** GDB
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package gdb-mi
+       :ensure t
+       :config (progn
+                 ;; use gdb-many-windows by default
+                 (setq gdb-many-windows t)
+
+                 ;; Non-nil means display source file containing the main routine at startup
+                 ;;(setq gdb-show-main t)
+
+                 ;; Force gdb-mi to not dedicate any windows
+                 ;; (advice-add 'gdb-display-buffer
+                 ;;             :around (lambda (orig-fun &rest r)
+                 ;;                       (let ((window (apply orig-fun r)))
+                 ;;                         (set-window-dedicated-p window nil)
+                 ;;                         window)))
+
+                 ;; (advice-add 'gdb-set-window-buffer
+                 ;;             :around (lambda (orig-fun name &optional ignore-dedicated window)
+                 ;;                       (funcall orig-fun name ignore-dedicated window)
+                 ;;                       (set-window-dedicated-p window nil)))
+
+                 (advice-add 'gdb-setup-windows
+                             :after (lambda ()
+                                      (set-window-dedicated-p (get-buffer-window gud-comint-buffer) t)))
+
+                 (add-hook 'gud-mode-hook 'gud-tooltip-mode)
+
+                 ;; Don't open files in new windows when stepping through code.
+                 (defadvice gud-display-line (around do-it-better activate)
+                   (let* ((last-nonmenu-event t)	 ; Prevent use of dialog box for questions.
+                          (buffer
+                           (with-current-buffer gud-comint-buffer
+                             (gud-find-file true-file)))
+                          (window (and buffer
+                                       (gdb-display-source-buffer buffer)))
+                          (pos))
+                     (when buffer
+                       (with-current-buffer buffer
+                         (unless (or (verify-visited-file-modtime buffer) gud-keep-buffer)
+                           (if (yes-or-no-p
+                                (format "File %s changed on disk.  Reread from disk? "
+                                        (buffer-name)))
+                               (revert-buffer t t)
+                             (setq gud-keep-buffer t)))
+                         (save-restriction
+                           (widen)
+                           (goto-char (point-min))
+                           (forward-line (1- line))
+                           (setq pos (point))
+                           (or gud-overlay-arrow-position
+                               (setq gud-overlay-arrow-position (make-marker)))
+                           (set-marker gud-overlay-arrow-position (point) (current-buffer))
+                           ;; If they turned on hl-line, move the hl-line highlight to
+                           ;; the arrow's line.
+                           (when (featurep 'hl-line)
+                             (cond
+                              (global-hl-line-mode
+                               (global-hl-line-highlight))
+                              ((and hl-line-mode hl-line-sticky-flag)
+                               (hl-line-highlight)))))
+                         (cond ((or (< pos (point-min)) (> pos (point-max)))
+                                (widen)
+                                (goto-char pos))))
+                       (when window
+                         (set-window-point window gud-overlay-arrow-position)
+                         (if (eq gud-minor-mode 'gdbmi)
+                             (setq gdb-source-window window))))))))
+   #+end_src
+
+** Company
+
+   Company is a text completion framework for Emacs. The name stands
+   for "complete anything". It uses pluggable back-ends and front-ends
+   to retrieve and display completion candidates.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (defvar company-mode/enable-yas t
+       "Enable yasnippet for all backends.")
+
+     (defun company-mode/backend-with-yas (backend)
+       (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+           backend
+         (append (if (consp backend) backend (list backend))
+                 '(:with company-yasnippet))))
+
+     (use-package company
+       :ensure t
+       :demand
+       :bind (:map company-active-map
+                   ("<tab>" . company-complete-selection)
+                   ("<return>" . newline))
+       :config (progn (add-hook 'after-init-hook 'global-company-mode)
+                      (setq company-idle-delay 0.2)
+                      (setq tab-always-indent 'complete)))
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package company-quickhelp
+       :ensure t
+       :bind (:map company-active-map
+                   ("C-c h" . company-quickhelp-manual-begin))
+       :config (progn (company-quickhelp-mode 1)
+                      (setq company-quickhelp-delay nil)))
+
+   #+end_src
+
+** Paredit
+
+   A really nice navigation and simple refactoring mode for lisp-like
+   languages. [[http://pub.gajendra.net/src/paredit-refcard.pdf][Keybind reference card]].
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package paredit-mode
+       ;;:delight paredit-mode
+       :ensure paredit
+       :hook (emacs-lisp-mode eval-expression-minibuffer-setup ielm-mode lisp-mode lisp-interaction-mode scheme-mode))
+
+   #+end_src   
+
+** Xah-Lookup
+
+   Search the web for term under point.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package xah-lookup
+       :ensure t
+       :bind (:map c++-mode-map
+                   ("C-c b" . xah-lookup-boost)
+                   ("C-c d" . xah-lookup-cppreference))
+       :config
+       ;; Uncomment the below line to use eww (Emacs Web Wowser)
+       ;; (setq xah-lookup-browser-function 'eww)
+       (defun xah-lookup-cppreference (&optional word)
+         "Lookup definition of current word or text selection in URL."
+         (interactive)
+         (xah-lookup-word-on-internet
+          word
+          ;; Use word02051 as a placeholder in the query URL.
+          "http://en.cppreference.com/mwiki/index.php?search=word02051"
+          xah-lookup-browser-function))
+
+       ;; Another example with http://www.boost.org
+       (defun xah-lookup-boost (&optional word)
+         (interactive)
+         (xah-lookup-word-on-internet
+          word
+          "https://cse.google.com/cse?cx=011577717147771266991:jigzgqluebe&q=word02051"
+          xah-lookup-browser-function)))
+
+   #+end_src
+
+** Irony-Mode
+
+   irony-mode is a minor-mode that aims at improving the editing
+   experience for the C, C++ and Objective-C languages. It works by
+   using a combination of an Emacs package and a C++ program
+   (irony-server) that uses libclang.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package irony
+       :ensure t
+       ;;:delight irony-mode
+       :bind (:map irony-mode-map
+                   ([remap completion-at-point] . irony-completion-at-point-async)
+                   ([remap complete-symbol] . irony-completion-at-point-async))
+       :config
+       (add-hook 'c++-mode-hook 'irony-mode)
+       (add-hook 'c-mode-hook 'irony-mode)
+       (add-hook 'objc-mode-hook 'irony-mode)
+       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+   #+end_src+
+
+   Completion backend (company) for irony-mode.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package company-irony
+       :ensure t
+       :config
+       (setq company-backends (remove 'company-clang company-backends))
+       (add-to-list 'company-backends 'company-irony)
+       ;; (push '(company-irony :with company-yasnippet) company-backends)
+     )
+
+   #+end_src
+
+   Flycheck for irony-mode.
+   
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package flycheck-irony
+       :ensure t
+       :config
+       (eval-after-load 'flycheck
+       '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+
+   #+end_src
+   
+   Eldoc support for irony-mode.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package irony-eldoc
+       :ensure t
+       ;;:delight eldoc-mode
+       :config
+       (add-hook 'irony-mode-hook 'irony-eldoc))
+
+   #+end_src
+
+** company-c-headers
+
+   Company completion for c- and c++-headers.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package company-c-headers
+       :ensure t
+       :config
+       (add-to-list 'company-backends 'company-c-headers)
+       (add-to-list 'company-c-headers-path-system "/usr/include/c++/6.3.1/"))
+
+   #+end_src
+
+** RealGUD
+
+   A extensible, modular GNU Emacs front-end for interacting with
+   external debuggers.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package realgud
+       :ensure t)
+
+   #+end_src
+
+** RTags
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (defun rtags-tooltip-mouse-motion (event)
+       "Command handler for mouse movement events in `global-map'."
+       (interactive "e")
+       (tooltip-hide)
+       (when (car (mouse-pixel-position))
+         (setq tooltip-last-mouse-motion-event (copy-sequence event))
+         (tooltip-start-delayed-tip)))
+
+     (use-package rtags
+       :ensure t
+       :demand
+       :bind (:map c-mode-base-map (("C-c n" . rtags-next-match)
+                                    ("C-c p" . rtags-previous-match)
+                                    ([mouse-movement] . rtags-tooltip-mouse-motion)))
+       :config (progn (setq rtags-display-summary-as-tooltip t)
+                      (rtags-set-periodic-reparse-timeout 3)
+                      (rtags-enable-standard-keybindings)
+                      (setq rtags-autostart-diagnostics t)
+                      (if rtags-display-summary-as-tooltip
+                        (add-hook 'c-mode-common-hook (lambda () (setq-local track-mouse t))))
+                      (rtags-diagnostics)))
+
+     (use-package ivy-rtags
+       :ensure t)
+
+     (use-package flycheck-rtags
+       :ensure t
+       :demand
+       :init (add-hook 'c-mode-common-hook (lambda ()
+                                             (flycheck-select-checker 'rtags)
+                                             (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+                                             (setq-local flycheck-check-syntax-automatically nil))))
+
+     (use-package company-rtags
+       :ensure t
+       :demand
+       :config (progn (setq rtags-completions-enabled t)
+                      (setq company-backends (remove 'company-semantic (remove 'company-clang company-backends)))
+                      (push 'company-rtags company-backends)
+                      (add-hook 'c-mode-common-hook (lambda () (setq-local completion-at-point-functions '(company-rtags-completion-at-point))))))
+
+   #+end_src
+
+** CMake-IDE
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package cmake-ide
+       :ensure t
+       :demand
+       :config
+       (setq cmake-ide-build-pool-use-persistent-naming t)
+       (let ((dir "~/.emacs.d/cmake-ide-build"))
+         (if (not (file-exists-p dir))
+             (make-directory dir t))
+         (setq cmake-ide-build-pool-dir dir))
+       (cmake-ide-setup))
+
+   #+end_src
+
+** Macrostep
+
+   macrostep is an Emacs minor mode for interactively stepping through
+   the expansion of macros in Emacs Lisp source code.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package macrostep
+       :ensure t
+       :bind (:map emacs-lisp-mode-map
+                   ("C-c e" . macrostep-expand)))
+
+   #+end_src
+
+** Python
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package elpy
+       :ensure
+       :hook (python-mode . elpy-mode))
+
+   #+end_src
+
+** nix-mode
+
+   Major mode for editing nix language files.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package nix-mode
+       :ensure t
+       :mode "\\.nix\\'"
+       :config (setq nix-indent-function 'nix-indent-line))
+
+   #+end_src
+
+
+* Ansible
+
+** YAML-Mode
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package yaml-mode
+       :ensure t)
+
+   #+end_src
+
+** Company
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package company-ansible
+       :ensure t
+       :config
+       (push 'company-ansible company-backends))
+
+   #+end_src
+
+** Ansible Documentation
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package ansible-doc
+       :ensure t
+       :config
+       (add-hook 'yaml-mode-hook 'ansible-doc-mode))
+
+   #+end_src
+
+
+* Keybindings
+
+  #+begin_src emacs-lisp :tangle yes
+
+    (global-set-key (kbd "C-x C-n") 'end-of-buffer)
+    (global-set-key (kbd "C-x C-p") 'beginning-of-buffer)
+
+    (global-set-key (kbd "M-1") 'other-frame)
+    (global-set-key (kbd "M-2") 'other-window)
+    (global-set-key (kbd "M-3") 'switch-to-buffer)
+    (global-set-key (kbd "M-!") 'delete-frame)
+      
+  #+end_src
+
+
+* Org-mode
+
+  #+begin_src emacs-lisp :tangle yes
+
+    (use-package org
+      :ensure nil
+      :commands org-mode
+      :bind (("C-c >" . org-demote-subtree)
+             ("C-c <" . org-promote-subtree)
+             ([remap org-return] . org-return-indent))
+      :config
+      ;; Increase calculator precision.
+      (defvar org-calc-default-modes '(calc-internal-prec 24
+                                                          calc-float-format (float 24)
+                                                          calc-angle-mode deg
+                                                          calc-prefer-frac nil
+                                                          calc-symbolic-mode nil
+                                                          calc-date-format (YYYY "-" MM "-" DD " " Www (" " hh ":" mm))
+                                                          calc-display-working-message t))
+      ;; Highlight code in native languages in code blocks.
+      (setq org-src-fontify-natively t)
+      (push '("" "xcolor" nil) org-latex-default-packages-alist)
+      (setcar (seq-find (lambda (val)
+                          (string-equal (cadr val) "hyperref"))
+                        org-latex-default-packages-alist)
+              "pdfborderstyle={/S/U/W 0.5},urlbordercolor=blue"))
+
+  #+end_src
+
+** Workarounds
+
+   #+begin_src emacs-lisp :tangle yes
+
+     ;; Ugly hack needed to make logarithms work when using elisp in
+     ;; org-table formula calculations
+     (defun logaritmera (x)
+       (log x))
+
+   #+end_src
+
+
+
+* Weechat
+** Relay password handling
+
+   #+begin_src emacs-lisp :tangle no
+
+     (defvar weechat-password-list nil
+       "A list of conses with hostname as a string being the car
+     and the a list of conses being the cdr. The conses in the
+     inner list has the port nr. as an int for car and the
+     password as a string for cdr.
+
+     Example: '((\"hostname\" . '((9001 . \"relay password\"))))")
+
+     (defun find-string (string list)
+       (if list
+           (if (string-equal string (caar list))
+               (car list)
+             (find-string string (cdr list)))
+         nil))
+
+     (defun find-weechat-password (hostname port)
+       (cdr (assq port (car (cddr (find-string hostname weechat-password-list))))))
+
+   #+end_src
+
+** Init and config
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package weechat
+       :ensure t
+       :config (progn 
+                 (setq weechat-auto-close-buffers t)
+                 (setq weechat-auto-monitor-buffers (quote ("#flummon" "#vikings" "#sparvnastet" "#ix" "#suga" "#nixos")))
+                 (setq weechat-auto-monitor-new-buffers (quote t))
+                 (setq weechat-auto-move-cursor-to-prompt nil)
+                 (setq weechat-auto-recenter nil)
+                 (setq weechat-buffer-line-limit 10000)
+                 (setq weechat-host-default "home.elis.nu")
+                 (setq weechat-mode-default "ssh -W localhost:%p %h")
+                 (setq weechat-modules (quote (weechat-button weechat-complete)))
+                 (setq weechat-password-callback (quote weechat-secrets-get-password))
+                 (setq weechat-port-default 8003)))
+
+     (use-package weechat-secrets
+       :demand
+       :after weechat)
+   #+end_src
+
+
+* Looks
+
+** Theme
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package dracula-theme
+       :ensure
+       :demand
+       :config (progn
+                 (load-theme 'dracula t)
+                 (mapc (lambda (args)
+                         (face-spec-reset-face (car args))
+                         (apply 'set-face-attribute args))
+                       '((font-lock-variable-name-face nil :foreground "#ffb86c")))))
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package spacemacs-common
+       :ensure spacemacs-theme
+       :config
+       (progn
+         (load-theme 'spacemacs-dark t)))
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package zerodark-theme
+       :ensure t
+       :demand
+       :config
+       (progn
+         (load-theme 'zerodark t)
+         (mapc (lambda (args)
+                 (face-spec-reset-face (car args))
+                 (apply 'set-face-attribute args))
+               '((font-lock-type-face nil :weight bold :foreground "#82A6DF")
+                 (font-lock-constant-face nil :weight bold)
+                 (font-lock-function-name-face nil :foreground "#FF88FF")
+                 (font-lock-keyword-face nil :foreground "#FFE329")
+                 (font-lock-string-face nil :foreground "#61CE3C")
+                 (font-lock-variable-name-face nil :foreground "#fcaf3e")
+                 (default nil :background "#202020" :foreground "#E0E0E0")
+                 (fringe nil :background "#202020" :foreground "#E0E0E0")
+                 (mode-line nil :background "#303333")
+                 (mode-line-inactive nil :background "#262929")
+                 (org-block-begin-line nil :foreground "#9eac8c" :height 0.9)
+                 (org-block-end-line nil :foreground "#9eac8c" :height 0.9)))
+         (setq zerodark-use-paddings-in-mode-line nil)
+         ;; (zerodark-setup-modeline-format)
+         ))
+
+   #+end_src
+
+** Modeline
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package telephone-line
+       :ensure t
+       :demand
+       :config
+       (telephone-line-mode 1))
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package spaceline
+       :ensure t
+       :demand
+       :config
+       (spaceline-spacemacs-theme))
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package powerline
+       :ensure t
+       :demand
+       :config
+       (powerline-default-theme))
+
+   #+end_src
+
+** [[https://stackoverflow.com/questions/3984730/emacs-gui-with-emacs-daemon-not-loading-fonts-correctly][Set font]]
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono 11"))
+
+   #+end_src
+
+** [[https://emacs.stackexchange.com/questions/13291/emacs-cursor-color-is-different-in-daemon-and-non-daemon-modes][Cursor color]]
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package frame
+       :config
+       (progn
+         (add-hook 'after-make-frame-functions
+                   (lambda (frame)
+                     (modify-frame-parameters
+                      frame (list (cons 'cursor-color "White")))))))
+
+   #+end_src
+
+
+* Misc
+** Elisp test snippets
+*** Advice
+
+    #+begin_src emacs-lisp :tangle no
+
+      (defun test-fun (name &optional r)
+        (if r
+            r
+          (list name)))
+
+      (advice-add 'test-fun
+                  :around (lambda (orig-fun name &optional r)
+                            (list 'advice (funcall orig-fun name r))) '((name . test)))
+
+      (advice-remove 'test-fun 'test)
+
+      (test-fun 'hej 'san)
+
+    #+end_src
+
+** Old config
+
+   Keep this for reference, don't evaluate on start.
+
+   #+begin_src emacs-lisp :tangle no
+
+     (require 'cl)
+
+     (byte-recompile-directory "~/.emacs.d/" 0)
+
+     (let ((conf-dir "~/.emacs.d/conf/"))
+       (add-to-list 'load-path conf-dir)
+       (mapcar 'load (remove* "elc$" (directory-files conf-dir) :test-not 'string-match)))
+
+     (custom-set-variables
+      ;; custom-set-variables was added by Custom.
+      ;; If you edit it by hand, you could mess it up, so be careful.
+      ;; Your init file should contain only one such instance.
+      ;; If there is more than one, they won't work right.
+      '(package-selected-packages
+        (quote
+         (helm webpaste weechat systemd paredit ldap-mode inf-ruby clojure-mode))))
+     (custom-set-faces
+      ;; custom-set-faces was added by Custom.
+      ;; If you edit it by hand, you could mess it up, so be careful.
+      ;; Your init file should contain only one such instance.
+      ;; If there is more than one, they won't work right.
+      '(default ((t (:inherit nil :stipple nil :background "black" :foreground "gray"))))
+      '(show-paren-match ((((class color) (background dark)) (:foreground "red")))))
+
+     (global-set-key [?\C-x?\C-b]
+                     (lambda (&optional files-only)
+                       (interactive "P")
+                       (let ((b (list-buffers-noselect files-only)))
+                         (switch-to-buffer b))))
+
+   #+end_src
