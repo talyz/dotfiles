@@ -7,6 +7,7 @@
 (setq package-archives
 	      '(("gnu" . "https://elpa.gnu.org/packages/")
 		("melpa" . "https://melpa.org/packages/")))
+
 (setq package-enable-at-startup nil)
 
 (let ((gc-cons-threshold (* 50 1000 1000))
@@ -28,6 +29,8 @@
 
   (load-file "~/emacs-config.el"))
 
+  (setq cquery-executable "@cquery@/bin/cquery")
+
 ;; Use a hook so the message doesn't get clobbered by other messages.
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -36,4 +39,6 @@
                              (float-time
                               (time-subtract after-init-time before-init-time)))
                      gcs-done)
-            (with-current-buffer "*scratch*" (mapcar #'(lambda (text) (insert text "\n")) (mapcar 'symbol-name features)))))
+            ;; (with-current-buffer "*scratch*" (mapcar #'(lambda (text) (insert text "\n")) (mapcar 'symbol-name features)))
+            ))
+

@@ -594,7 +594,7 @@
      (use-package highlight-symbol
        :ensure t
        ;;:delight highlight-symbol-mode
-       :hook ((c-mode c++-mode python-mode emacs-lisp-mode) . highlight-symbol-mode)
+       :hook ((python-mode emacs-lisp-mode) . highlight-symbol-mode)
        :config (progn (setq highlight-symbol-idle-delay 0.5)
                       (setq highlight-symbol-highlight-single-occurrence nil)))
 
@@ -637,24 +637,24 @@
 
      (use-package cc-mode
        :defer t
-       :config (progn (font-lock-add-keywords 'c++-mode
-                                              `(;; (,(concat
-                                                ;;    "\\<[_a-zA-Z][_a-zA-Z0-9]*\\>" ; Object identifier
-                                                ;;    "\\s *"  ; Optional white space
-                                                ;;    "\\(?:\\.\\|->\\)" ; Member access
-                                                ;;    "\\s *"  ; Optional white space
-                                                ;;    ;; "\\<\\([_a-zA-Z][_a-zA-Z0-9]*\\)\\>" ; Member identifier
-                                                ;;    "\\<\\([_a-zA-Z]\\w*\\)\\>" ; Member identifier
-                                                ;;    "\\s *"   ; Optional white space
-                                                ;;    "(")      ; Paren for method invocation
-                                                ;;  1 'font-lock-function-name-face)
-                                                (,(concat "\\<\\([_a-zA-Z]\\w*\\)\\>"
-                                                          "\\s *"
-                                                          "\\(?:<\\(?:[_a-zA-Z]\\w*::\\)*[_a-zA-Z]\\w*>\\)*"
-                                                          "\\s *"
-                                                          "(")
-                                                 1 'font-lock-function-name-face))
-                                              t)
+       :config (progn ;; (font-lock-add-keywords 'c++-mode
+                      ;;                         `(;; (,(concat
+                      ;;                           ;;    "\\<[_a-zA-Z][_a-zA-Z0-9]*\\>" ; Object identifier
+                      ;;                           ;;    "\\s *"  ; Optional white space
+                      ;;                           ;;    "\\(?:\\.\\|->\\)" ; Member access
+                      ;;                           ;;    "\\s *"  ; Optional white space
+                      ;;                           ;;    ;; "\\<\\([_a-zA-Z][_a-zA-Z0-9]*\\)\\>" ; Member identifier
+                      ;;                           ;;    "\\<\\([_a-zA-Z]\\w*\\)\\>" ; Member identifier
+                      ;;                           ;;    "\\s *"   ; Optional white space
+                      ;;                           ;;    "(")      ; Paren for method invocation
+                      ;;                           ;;  1 'font-lock-function-name-face)
+                      ;;                           (,(concat "\\<\\([_a-zA-Z]\\w*\\)\\>"
+                      ;;                                     "\\s *"
+                      ;;                                     "\\(?:<\\(?:[_a-zA-Z]\\w*::\\)*[_a-zA-Z]\\w*>\\)*"
+                      ;;                                     "\\s *"
+                      ;;                                     "(")
+                      ;;                            1 'font-lock-function-name-face))
+                      ;;                         t)
                       (add-hook 'c-mode-common-hook (lambda ()
                                                       (c-toggle-auto-hungry-state 1)
                                                       (setq indent-tabs-mode nil)))
@@ -940,9 +940,68 @@
 
    #+end_src
 
+** dap-mode
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (use-package dap-mode
+       :ensure
+       :demand
+       :config (progn
+                 (dap-mode 1)
+                 (dap-ui-mode 1)
+                 (require 'dap-lldb)
+                 (require 'dap-python)))
+
+   #+END_SRC
+   
+** lsp-mode
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (use-package lsp-mode
+       :ensure
+       :commands lsp)
+
+     (use-package lsp-ui
+       :ensure
+       :commands lsp-ui-mode)
+
+     (use-package company-lsp
+       :ensure
+       :commands company-lsp)
+
+   #+END_SRC
+
+** cquery
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (defun cquery//enable ()
+       (condition-case nil
+           (progn
+             (direnv-update-directory-environment)
+             (lsp))
+         (user-error nil)))
+
+     (use-package cquery
+       :ensure
+       :demand
+       :commands lsp
+       :hook ((c-mode . cquery//enable)
+              (c++-mode . cquery//enable))
+       :config (progn
+                 (setq cquery-sem-highlight-method 'font-lock)
+                 (setq company-transformers nil)
+                 (setq company-lsp-async t)
+                 (setq company-lsp-cache-candidates nil)))
+     ;; Also see lsp-project-whitelist lsp-project-blacklist cquery-root-matchers
+
+   #+END_SRC
+
 ** RTags
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (defun rtags-tooltip-mouse-motion (event)
        "Command handler for mouse movement events in `global-map'."
@@ -989,7 +1048,7 @@
 
 ** CMake-IDE
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (use-package cmake-ide
        :ensure t
@@ -1040,6 +1099,18 @@
        :config (setq nix-indent-function 'nix-indent-line))
 
    #+end_src
+
+** direnv
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (use-package direnv
+       :ensure t
+       :demand
+       :config (progn
+                 (direnv-mode)))
+
+   #+END_SRC
 
 
 * Ansible
