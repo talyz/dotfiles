@@ -79,7 +79,6 @@
 
      (use-package yasnippet
        :ensure
-       :demand
        ;;:delight yas-minor-mode
        :config (yas-global-mode 1))
 
