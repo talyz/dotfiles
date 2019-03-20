@@ -1133,7 +1133,7 @@
 
 ** Company
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (use-package company-ansible
        :ensure t
@@ -1144,7 +1144,7 @@
 
 ** Ansible Documentation
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (use-package ansible-doc
        :ensure t
