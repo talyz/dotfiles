@@ -542,6 +542,10 @@
      (use-package ivy-rich
        :ensure t)
 
+     (use-package ivy-xref
+       :ensure t
+       :demand
+       :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
    #+end_src
 
 
