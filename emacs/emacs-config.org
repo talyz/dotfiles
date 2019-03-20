@@ -133,7 +133,8 @@
                    ("C-p" . mc/mark-previous-like-this)
                    ("n" . mc/mark-next-like-this-symbol)
                    ("p" . mc/mark-previous-like-this-symbol)
-                   ("C-a" . 'mc/mark-all-like-this)))
+                   ("a" . 'mc/mark-all-like-this)
+                   ("C-a" . 'mc/edit-lines)))
 
    #+end_src
 
