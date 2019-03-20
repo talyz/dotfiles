@@ -144,7 +144,7 @@
 
      (use-package magit
        :ensure t
-       :bind (("C-M-g" . magit-dispatch-popup)
+       :bind (("C-M-g" . magit-file-popup)
               ("C-c g" . magit-status)))
 
    #+end_src
