@@ -1147,6 +1147,21 @@
    #+end_src
 
 
+* PDF
+
+** pdf-tools
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (use-package pdf-tools
+       :ensure t
+       :mode "\\.pdf\\'"
+       :config
+       (pdf-tools-install))
+       
+   #+END_SRC
+
+
 * Keybindings
 
   #+begin_src emacs-lisp :tangle yes
