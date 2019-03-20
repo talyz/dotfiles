@@ -89,6 +89,7 @@
 
      (use-package ivy-yasnippet
        :ensure
+       :bind ("C-c y" . ivy-yasnippet)
        :after yasnippet)
 
    #+end_src
