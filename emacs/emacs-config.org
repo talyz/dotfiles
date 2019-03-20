@@ -1081,7 +1081,9 @@
 
      (use-package elpy
        :ensure
-       :hook (python-mode . elpy-mode))
+       :hook (python-mode . elpy-mode)
+       :config (progn
+                 (elpy-enable)))
 
    #+end_src
 
