@@ -443,6 +443,8 @@
                (?1 delete-other-windows " Ace - Maximize Window")))
        (setq aw-dispatch-always t)
 
+       (setq aw-scope 'frame)
+  
        (defun aw-keep-focus (orig-fun window)
          (aw-switch-to-window window)
          (funcall orig-fun window)
