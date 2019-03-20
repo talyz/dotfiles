@@ -6,8 +6,10 @@
 #    ssh-agent -c | sed -e s/:/\'\ \'/g -e s/setenv/set\ -gx/ | .
 # end
 
-if status --is-login
-   set -x SSH_AUTH_SOCK (systemctl --user show-environment | grep SSH_AUTH_SOCK | sed -e 's/.*=//')
-end
+# if status --is-login
+#    set -x SSH_AUTH_SOCK (systemctl --user show-environment | grep SSH_AUTH_SOCK | sed -e 's/.*=//')
+# end
+
+eval (direnv hook fish)
 
 set fish_greeting ""
