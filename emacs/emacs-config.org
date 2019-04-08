@@ -145,7 +145,8 @@
      (use-package magit
        :ensure t
        :bind (("C-M-g" . magit-file-popup)
-              ("C-c g" . magit-status)))
+              ("C-c g" . magit-status))
+       :config (require 'projectile))
 
    #+end_src
 
@@ -476,9 +477,16 @@
        :ensure t
        :bind-keymap ("C-c p" . projectile-command-map)
        ;;:delight '(:eval (concat " " (projectile-project-name)))
-       :config
-       (setq projectile-completion-system 'ivy)
-       (projectile-mode 1))
+       :config (progn
+                 (setq projectile-completion-system 'ivy)
+                 (projectile-mode 1)
+                 (setq magit-repository-directories
+                       (mapcar (lambda (dir)
+                                 (cons dir 0))
+                               (mapcar #'directory-file-name
+                                       (cl-remove-if-not (lambda (project)
+                                                           (file-exists-p (concat project "/.git")))
+                                                         (projectile-relevant-known-projects)))))))
 
    #+end_src
 
