@@ -579,10 +579,10 @@
        (setq ivy-count-format "(%d/%d) ")
        (setq ivy-wrap t)
        (setq ivy-height 20)
+       (ivy-mode 1)
        ;; (setq ivy-re-builders-alist
        ;;       '((swiper . ivy--regex-plus)
        ;;         (t . ivy--regex-fuzzy)))
-       ;; (ivy-mode 1)
        ;; (face-spec-reset-face 'ivy-current-match)
        ;; (apply 'set-face-attribute '(ivy-current-match nil ;; :foreground "#c678dd"
        ;;                                                :background "#48384c"))
