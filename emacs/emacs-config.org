@@ -149,6 +149,73 @@
 
    #+end_src
 
+** vdiff
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (defvar vdiff-custom-keymap (make-sparse-keymap))
+
+     (use-package vdiff
+       :ensure t
+       :bind-keymap ("C-c d" . vdiff-custom-keymap)
+       :bind (:map vdiff-custom-keymap
+                   ("f" . vdiff-files)
+                   ("b" . vdiff-buffers)
+                   ("C-f" . vdiff-files3)
+                   ("C-b" . vdiff-buffers3)
+                   ("c" . vdiff-current-file)
+                   ("m" . vdiff-merge-conflict)
+              :map vdiff-mode-map
+                   ("C-c d" . vdiff-hydra/body)
+              :map vdiff-3way-mode-map
+                   ("C-c d" . vdiff-hydra/body))
+       :config (progn
+                 ;;(setq vdiff-auto-refine t)
+                 (setq vdiff-default-refinement-syntax-code "w_")
+                 (setq vdiff-subtraction-fill-char ? )
+                 (mapc (lambda (args)
+                         (face-spec-reset-face (car args))
+                         (apply 'set-face-attribute args))
+                       '((diff-changed nil :background "#4a4c58")
+                         (diff-refine-changed nil :foreground "#ee3333")
+                         (diff-added nil :background "#283a36")
+                         (diff-refine-added nil :background "#285a36" :weight bold)
+                         (vdiff-closed-fold-face nil :foreground "#989a96" :background "#383a56")))))
+
+     (use-package vdiff-magit
+       :ensure t
+       :after magit
+       :demand
+       :bind (:map magit-mode-map
+                   ("e" . vdiff-magit-dwim)
+                   ("E" . vdiff-magit-popup))
+       :config (progn
+                 (setcdr (assoc ?e (plist-get magit-dispatch-popup :actions))
+                         '("vdiff dwim" vdiff-magit-dwim))
+                 (setcdr (assoc ?E (plist-get magit-dispatch-popup :actions))
+                         '("vdiff popup" vdiff-magit-popup))
+                 ;; (transient-suffix-put 'magit-dispatch "e" :description "vdiff (dwim)")
+                 ;; (transient-suffix-put 'magit-dispatch "e" :command 'vdiff-magit-dwim)
+                 ;; (transient-suffix-put 'magit-dispatch "E" :description "vdiff")
+                 ;; (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit)
+                 )
+
+                 ;; This flag will default to using ediff for merges.
+                 ;; (setq vdiff-magit-use-ediff-for-merges nil)
+
+                 ;; Whether vdiff-magit-dwim runs show variants on hunks.  If non-nil,
+                 ;; vdiff-magit-show-staged or vdiff-magit-show-unstaged are called based on what
+                 ;; section the hunk is in.  Otherwise, vdiff-magit-dwim runs vdiff-magit-stage
+                 ;; when point is on an uncommitted hunk.
+                 ;; (setq vdiff-magit-dwim-show-on-hunks nil)
+
+                 ;; Whether vdiff-magit-show-stash shows the state of the index.
+                 ;; (setq vdiff-magit-show-stash-with-index t)
+
+                 ;; Only use two buffers (working file and index) for vdiff-magit-stage
+                 (setq vdiff-magit-stage-is-2way t))
+   #+END_SRC
+
 
 * Behaviour
 ** Disable tool bar
