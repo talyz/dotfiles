@@ -189,17 +189,12 @@
        :demand
        :bind (:map magit-mode-map
                    ("e" . vdiff-magit-dwim)
-                   ("E" . vdiff-magit-popup))
+                   ("E" . vdiff-magit))
        :config (progn
-                 (setcdr (assoc ?e (plist-get magit-dispatch-popup :actions))
-                         '("vdiff dwim" vdiff-magit-dwim))
-                 (setcdr (assoc ?E (plist-get magit-dispatch-popup :actions))
-                         '("vdiff popup" vdiff-magit-popup))
-                 ;; (transient-suffix-put 'magit-dispatch "e" :description "vdiff (dwim)")
-                 ;; (transient-suffix-put 'magit-dispatch "e" :command 'vdiff-magit-dwim)
-                 ;; (transient-suffix-put 'magit-dispatch "E" :description "vdiff")
-                 ;; (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit)
-                 )
+                 (transient-suffix-put 'magit-dispatch "e" :description "vdiff (dwim)")
+                 (transient-suffix-put 'magit-dispatch "e" :command 'vdiff-magit-dwim)
+                 (transient-suffix-put 'magit-dispatch "E" :description "vdiff")
+                 (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit))
 
                  ;; This flag will default to using ediff for merges.
                  ;; (setq vdiff-magit-use-ediff-for-merges nil)
