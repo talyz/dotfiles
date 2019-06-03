@@ -657,6 +657,23 @@
 
    #+end_src
 
+** Ansible
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package company-ansible
+       :ensure t
+       :config
+       (push 'company-ansible company-backends))
+
+     (use-package ansible-doc
+       :ensure t
+       :config
+       (add-hook 'yaml-mode-hook 'ansible-doc-mode))
+
+   #+end_src
+
+
 
 * Programming
 ** Highlight parentheses
@@ -1186,8 +1203,74 @@
    #+END_SRC
 
 
-* Ansible
+* Data
+** Org-mode
 
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package org
+       :ensure nil
+       :commands org-mode
+       :bind (("C-c a" . org-agenda)
+              ("C-c c" . org-capture)
+              ("C-c l" . org-store-link)
+              ([remap org-return] . org-return-indent)
+              :map org-mode-map
+              ([C-right] . org-demote-subtree)
+              ([C-left] . org-promote-subtree))
+       :config (progn
+                 ;; Increase calculator precision.
+                 (defvar org-calc-default-modes '(calc-internal-prec 24
+                                                                     calc-float-format (float 24)
+                                                                     calc-angle-mode deg
+                                                                     calc-prefer-frac nil
+                                                                     calc-symbolic-mode nil
+                                                                     calc-date-format (YYYY "-" MM "-" DD " " Www (" " hh ":" mm))
+                                                                     calc-display-working-message t))
+                 (setq org-agenda-files '("~/org/work.org"
+                                          "~/org/home.org"))
+                 (setq org-default-notes-file (concat org-directory "/notes.org"))
+                 (setq org-log-done t)
+                 (setq org-agenda-todo-list-sublevels nil)
+
+                 (setq ;;org-startup-indented t
+                       ;;org-indent-mode-turns-off-org-adapt-indentation nil
+                       org-odd-levels-only t
+                       ;; org-bullets-bullet-list '(" ") ;; no bullets, needs org-bullets package
+                       org-ellipsis "  " ;; folding symbol
+                       org-pretty-entities t
+                       org-hide-emphasis-markers t
+                       ;; show actually italicized text instead of /italicized text/
+                       org-agenda-block-separator ""
+                       org-fontify-whole-heading-line t
+                       org-fontify-done-headline t
+                       org-fontify-quote-and-verse-blocks t)
+            
+                 ;; Highlight code in native languages in code blocks.
+                 (setq org-src-fontify-natively t)
+                 (push '("" "xcolor" nil) org-latex-default-packages-alist)
+                 (setcar (seq-find (lambda (val)
+                                     (string-equal (cadr val) "hyperref"))
+                                   org-latex-default-packages-alist)
+                         "pdfborderstyle={/S/U/W 0.5},urlbordercolor=blue")))
+
+     (use-package org-bullets
+       :ensure t
+       :hook (org-mode . org-bullets-mode))
+            
+   #+end_src
+
+*** Workarounds
+
+    #+begin_src emacs-lisp :tangle yes
+
+      ;; Ugly hack needed to make logarithms work when using elisp in
+      ;; org-table formula calculations
+      (defun logaritmera (x)
+        (log x))
+
+    #+end_src
+    
 ** YAML-Mode
 
    #+begin_src emacs-lisp :tangle yes
@@ -1197,28 +1280,16 @@
 
    #+end_src
 
-** Company
+** csv-mode
 
-   #+begin_src emacs-lisp :tangle no
+   #+BEGIN_SRC emacs-lisp :tangle yes
 
-     (use-package company-ansible
+     (use-package csv-mode
        :ensure t
-       :config
-       (push 'company-ansible company-backends))
+       :mode "\\.[Cc][Ss][Vv]\\'")
 
-   #+end_src
-
-** Ansible Documentation
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package ansible-doc
-       :ensure t
-       :config
-       (add-hook 'yaml-mode-hook 'ansible-doc-mode))
-
-   #+end_src
-
+   #+END_SRC
+  
 
 * PDF
 
@@ -1248,48 +1319,6 @@
     (global-set-key (kbd "M-!") 'delete-frame)
       
   #+end_src
-
-
-* Org-mode
-
-  #+begin_src emacs-lisp :tangle yes
-
-    (use-package org
-      :ensure nil
-      :commands org-mode
-      :bind (("C-c >" . org-demote-subtree)
-             ("C-c <" . org-promote-subtree)
-             ([remap org-return] . org-return-indent))
-      :config
-      ;; Increase calculator precision.
-      (defvar org-calc-default-modes '(calc-internal-prec 24
-                                                          calc-float-format (float 24)
-                                                          calc-angle-mode deg
-                                                          calc-prefer-frac nil
-                                                          calc-symbolic-mode nil
-                                                          calc-date-format (YYYY "-" MM "-" DD " " Www (" " hh ":" mm))
-                                                          calc-display-working-message t))
-      ;; Highlight code in native languages in code blocks.
-      (setq org-src-fontify-natively t)
-      (push '("" "xcolor" nil) org-latex-default-packages-alist)
-      (setcar (seq-find (lambda (val)
-                          (string-equal (cadr val) "hyperref"))
-                        org-latex-default-packages-alist)
-              "pdfborderstyle={/S/U/W 0.5},urlbordercolor=blue"))
-
-  #+end_src
-
-** Workarounds
-
-   #+begin_src emacs-lisp :tangle yes
-
-     ;; Ugly hack needed to make logarithms work when using elisp in
-     ;; org-table formula calculations
-     (defun logaritmera (x)
-       (log x))
-
-   #+end_src
-
 
 
 * Weechat
