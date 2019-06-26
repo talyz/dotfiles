@@ -1354,12 +1354,12 @@
        :ensure t
        :config (progn 
                  (setq weechat-auto-close-buffers t)
-                 (setq weechat-auto-monitor-buffers (quote ("#flummon" "#vikings" "#sparvnastet" "#ix" "#suga" "#nixos")))
+                 (setq weechat-auto-monitor-buffers '("#flummon" "#vikings" "#sparvnastet" "#ix" "#suga" "#nixos" "#nixos-chat"))
                  (setq weechat-auto-monitor-new-buffers (quote t))
                  (setq weechat-auto-move-cursor-to-prompt nil)
                  (setq weechat-auto-recenter nil)
                  (setq weechat-buffer-line-limit 10000)
-                 (setq weechat-host-default "home.elis.nu")
+                 (setq weechat-host-default "vps04.elis.nu")
                  (setq weechat-mode-default "ssh -W localhost:%p %h")
                  (setq weechat-modules (quote (weechat-button weechat-complete)))
                  (setq weechat-password-callback (quote weechat-secrets-get-password))
