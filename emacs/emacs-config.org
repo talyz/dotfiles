@@ -144,7 +144,7 @@
 
      (use-package magit
        :ensure t
-       :bind (("C-M-g" . magit-file-popup)
+       :bind (("C-M-g" . magit-file-dispatch)
               ("C-c g" . magit-status))
        :config (require 'projectile))
 
