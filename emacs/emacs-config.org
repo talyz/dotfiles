@@ -281,8 +281,11 @@
      (setq kept-old-versions 2)
      (setq version-control t)
 
-     (setq auto-save-file-name-transforms
-           '((".*" "~/.emacs.d/auto-saves/" t)))
+     (let ((dir "~/.emacs.d/auto-saves/"))
+       (unless (file-directory-p dir)
+         (mkdir dir))
+       (setq auto-save-file-name-transforms
+             `((".*" ,dir t))))
 
    #+end_src
 
