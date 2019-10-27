@@ -404,7 +404,7 @@
 
 ** Highlight current line
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (global-hl-line-mode 1)
         
@@ -694,9 +694,12 @@
      (use-package highlight-symbol
        :ensure t
        ;;:delight highlight-symbol-mode
-       :hook ((python-mode emacs-lisp-mode) . highlight-symbol-mode)
-       :config (progn (setq highlight-symbol-idle-delay 0.5)
-                      (setq highlight-symbol-highlight-single-occurrence nil)))
+       :hook (((python-mode emacs-lisp-mode nix-mode) . highlight-symbol-mode)
+              ((python-mode emacs-lisp-mode nix-mode) . highlight-symbol-nav-mode))
+       :config (progn (highlight-symbol-nav-mode)
+                      (setq highlight-symbol-idle-delay 0.5)
+                      (setq highlight-symbol-highlight-single-occurrence nil)
+                      (set-face-attribute 'highlight-symbol-face nil :background "dark cyan")))
 
    #+end_src
 
