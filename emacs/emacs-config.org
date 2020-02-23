@@ -17,7 +17,7 @@
                      ("melpa" . "https://melpa.org/packages/")))
 
      (setq-default package-enable-at-startup nil)
-     (package-initialize)   
+     (package-initialize)
 
    #+end_src
 
@@ -29,7 +29,7 @@
    package is actually used.
 
    This should preferrably be done in the init-file,
-   before this file is loaded, to allow for byte-compiling.   
+   before this file is loaded, to allow for byte-compiling.
 
    #+begin_src emacs-lisp :tangle no
 
@@ -43,7 +43,7 @@
    #+end_src
 
 ** CL
-   
+
    Require cl for extended functionality from common lisp used in
    various places.
 
@@ -53,7 +53,7 @@
 
    #+end_src
 
-   
+
 * Utils
 ** Webpaste
 
@@ -251,7 +251,7 @@
    #+begin_src emacs-lisp :tangle yes
 
      (setq-default ring-bell-function 'ignore)
-       	
+
    #+end_src
 
 ** Always use space instead of tabs
@@ -315,7 +315,7 @@
 
      (put 'upcase-region 'disabled nil)
      (put 'downcase-region 'disabled nil)
-   
+
    #+end_src
 
 ** Scrolling
@@ -407,17 +407,17 @@
    #+begin_src emacs-lisp :tangle no
 
      (global-hl-line-mode 1)
-        
+
    #+end_src
 
 ** Calendar week start
-   
+
    Set the calendar week start day to monday; default is sunday.
 
    #+begin_src emacs-lisp :tangle yes
 
      (setq calendar-week-start-day 1)
-	
+
    #+end_src
 ** Always close temporary buffers
 
@@ -427,8 +427,8 @@
    #+begin_src emacs-lisp :tangle yes
 
      (advice-add 'quit-window
-		 :around (lambda (orig-fun &rest r)
-			   (apply orig-fun '(t))))
+                 :around (lambda (orig-fun &rest r)
+                           (apply orig-fun '(t))))
 
    #+end_src
 
@@ -441,7 +441,7 @@
 
      (when (fboundp 'winner-mode)
        (winner-mode 1))
-	
+
    #+end_src
 
 ** Delight
@@ -452,7 +452,7 @@
        :ensure t)
 
    #+end_src
-   
+
 ** Sr-Speedbar
 
    #+begin_src emacs-lisp :tangle yes
@@ -517,7 +517,7 @@
        (setq aw-dispatch-always t)
 
        (setq aw-scope 'frame)
-  
+
        (defun aw-keep-focus (orig-fun window)
          (aw-switch-to-window window)
          (funcall orig-fun window)
@@ -530,7 +530,7 @@
    #+end_src
 
 ** Helm
-   
+
    #+begin_src emacs-lisp :tangle no
 
      (use-package helm-mode
@@ -684,7 +684,7 @@
    #+begin_src emacs-lisp :tangle yes
 
      (show-paren-mode 1)
-	
+
    #+end_src
 
 ** Highlight symbol
@@ -722,7 +722,7 @@
    #+end_src
 
    Show errors under point in pos-tip popups.
-   
+
    #+begin_src emacs-lisp :tangle yes
 
      (use-package flycheck-pos-tip
@@ -912,7 +912,7 @@
        :ensure paredit
        :hook (emacs-lisp-mode eval-expression-minibuffer-setup ielm-mode lisp-mode lisp-interaction-mode scheme-mode))
 
-   #+end_src   
+   #+end_src
 
 ** Xah-Lookup
 
@@ -985,7 +985,7 @@
    #+end_src
 
    Flycheck for irony-mode.
-   
+
    #+begin_src emacs-lisp :tangle no
 
      (use-package flycheck-irony
@@ -995,7 +995,7 @@
        '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
    #+end_src
-   
+
    Eldoc support for irony-mode.
 
    #+begin_src emacs-lisp :tangle no
@@ -1048,7 +1048,7 @@
                  (require 'dap-python)))
 
    #+END_SRC
-   
+
 ** lsp-mode
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1243,7 +1243,7 @@
                        ;;org-indent-mode-turns-off-org-adapt-indentation nil
                        org-odd-levels-only t
                        ;; org-bullets-bullet-list '(" ") ;; no bullets, needs org-bullets package
-                       org-ellipsis "  " ;; folding symbol
+                       org-ellipsis " ↓ " ;; folding symbol
                        org-pretty-entities t
                        org-hide-emphasis-markers t
                        ;; show actually italicized text instead of /italicized text/
@@ -1251,7 +1251,7 @@
                        org-fontify-whole-heading-line t
                        org-fontify-done-headline t
                        org-fontify-quote-and-verse-blocks t)
-            
+
                  ;; Highlight code in native languages in code blocks.
                  (setq org-src-fontify-natively t)
                  (push '("" "xcolor" nil) org-latex-default-packages-alist)
@@ -1263,7 +1263,7 @@
      (use-package org-bullets
        :ensure t
        :hook (org-mode . org-bullets-mode))
-            
+
    #+end_src
 
 *** Workarounds
@@ -1276,7 +1276,7 @@
         (log x))
 
     #+end_src
-    
+
 ** YAML-Mode
 
    #+begin_src emacs-lisp :tangle yes
@@ -1295,7 +1295,7 @@
        :mode "\\.[Cc][Ss][Vv]\\'")
 
    #+END_SRC
-  
+
 
 * PDF
 
@@ -1308,7 +1308,7 @@
        :mode "\\.pdf\\'"
        :config
        (pdf-tools-install))
-       
+
    #+END_SRC
 
 
@@ -1323,7 +1323,7 @@
     (global-set-key (kbd "M-2") 'other-window)
     (global-set-key (kbd "M-3") 'switch-to-buffer)
     (global-set-key (kbd "M-!") 'delete-frame)
-      
+
   #+end_src
 
 
@@ -1358,7 +1358,7 @@
 
      (use-package weechat
        :ensure t
-       :config (progn 
+       :config (progn
                  (setq weechat-auto-close-buffers t)
                  (setq weechat-auto-monitor-buffers '("#flummon" "#vikings" "#sparvnastet" "#ix" "#suga" "#nixos" "#nixos-chat"))
                  (setq weechat-auto-monitor-new-buffers (quote t))
