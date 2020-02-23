@@ -1246,12 +1246,12 @@
        :config (progn
                  ;; Increase calculator precision.
                  (defvar org-calc-default-modes '(calc-internal-prec 24
-                                                                     calc-float-format (float 24)
-                                                                     calc-angle-mode deg
-                                                                     calc-prefer-frac nil
-                                                                     calc-symbolic-mode nil
-                                                                     calc-date-format (YYYY "-" MM "-" DD " " Www (" " hh ":" mm))
-                                                                     calc-display-working-message t))
+                                                  calc-float-format (float 24)
+                                                  calc-angle-mode deg
+                                                  calc-prefer-frac nil
+                                                  calc-symbolic-mode nil
+                                                  calc-date-format (YYYY "-" MM "-" DD " " Www (" " hh ":" mm))
+                                                  calc-display-working-message t))
                  (setq org-agenda-files '("~/org/work.org"
                                           "~/org/home.org"))
                  (setq org-default-notes-file (concat org-directory "/notes.org"))
