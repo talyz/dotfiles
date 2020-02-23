@@ -403,7 +403,7 @@
    #+begin_src emacs-lisp :tangle yes
 
      (require 'saveplace)
-     (setq-default save-place t)
+     (save-place-mode t)
 
    #+end_src
 ** Disable the start screen
