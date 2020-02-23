@@ -212,6 +212,15 @@
                  (setq vdiff-magit-stage-is-2way t))
    #+END_SRC
 
+** vterm
+
+   #+BEGIN_SRC emacs-lisp :tangle yes
+
+     (use-package vterm
+       :ensure t)
+
+   #+END_SRC
+
 
 * Behaviour
 ** Disable tool bar
