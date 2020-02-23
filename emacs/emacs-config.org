@@ -263,6 +263,16 @@
 
    #+end_src
 
+** Truncate lines
+
+   Disable line wrapping.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (setq-default truncate-lines t)
+
+   #+end_src
+
 ** Always use space instead of tabs
 
    Always indent using space instead of tabs.
