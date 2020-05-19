@@ -873,12 +873,13 @@
                            (set-marker gud-overlay-arrow-position (point) (current-buffer))
                            ;; If they turned on hl-line, move the hl-line highlight to
                            ;; the arrow's line.
-                           (when (featurep 'hl-line)
-                             (cond
-                              (global-hl-line-mode
-                               (global-hl-line-highlight))
-                              ((and hl-line-mode hl-line-sticky-flag)
-                               (hl-line-highlight)))))
+                           ;; (when (featurep 'hl-line)
+                           ;;   (cond
+                           ;;    (global-hl-line-mode
+                           ;;     (global-hl-line-highlight))
+                           ;;    ((and hl-line-mode hl-line-sticky-flag)
+                           ;;     (hl-line-highlight))))
+                           )
                          (cond ((or (< pos (point-min)) (> pos (point-max)))
                                 (widen)
                                 (goto-char pos))))
