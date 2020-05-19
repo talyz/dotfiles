@@ -1407,11 +1407,8 @@
        :ensure
        :demand
        :config (progn
-                 (load-theme 'dracula t)
-                 (mapc (lambda (args)
-                         (face-spec-reset-face (car args))
-                         (apply 'set-face-attribute args))
-                       '((font-lock-variable-name-face nil :foreground "#ffb86c")))))
+                 (setq dracula-enlarge-headings nil)
+                 (load-theme 'dracula t)))
 
    #+end_src
 
