@@ -645,6 +645,17 @@
        :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
    #+end_src
 
+** Hungry delete
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package hungry-delete
+       :ensure t
+       :defer nil
+       :config (global-hungry-delete-mode))
+
+   #+end_src
+
 
 * Security
 
