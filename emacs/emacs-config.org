@@ -1239,6 +1239,18 @@
 
    #+END_SRC
 
+** Elixir
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package elixir-mode
+       :ensure t)
+
+     (use-package alchemist
+       :ensure t)
+
+   #+end_src
+
 
 * Data
 ** Org-mode
