@@ -1031,6 +1031,10 @@
        :ensure
        :commands lsp-ui-mode)
 
+     (use-package lsp-ivy
+       :ensure
+       :commands lsp-ivy-workspace-symbol)
+
    #+END_SRC
 
 ** CMake-IDE
