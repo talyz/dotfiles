@@ -1412,11 +1412,15 @@
                  (setq weechat-mode-default "ssh -W localhost:%p %h")
                  (setq weechat-modules (quote (weechat-button weechat-complete)))
                  (setq weechat-password-callback (quote weechat-secrets-get-password))
-                 (setq weechat-port-default 8003)))
+                 (setq weechat-port-default 8003)
+                 (add-hook 'weechat-mode-hook (lambda ()
+                                                (setq truncate-lines nil)))))
+
 
      (use-package weechat-secrets
        :demand
        :after weechat)
+
    #+end_src
 
 
