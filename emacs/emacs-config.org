@@ -978,67 +978,6 @@
 
    #+end_src
 
-** Irony-Mode
-
-   irony-mode is a minor-mode that aims at improving the editing
-   experience for the C, C++ and Objective-C languages. It works by
-   using a combination of an Emacs package and a C++ program
-   (irony-server) that uses libclang.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package irony
-       :ensure t
-       ;;:delight irony-mode
-       :bind (:map irony-mode-map
-                   ([remap completion-at-point] . irony-completion-at-point-async)
-                   ([remap complete-symbol] . irony-completion-at-point-async))
-       :config
-       (add-hook 'c++-mode-hook 'irony-mode)
-       (add-hook 'c-mode-hook 'irony-mode)
-       (add-hook 'objc-mode-hook 'irony-mode)
-       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-   #+end_src+
-
-   Completion backend (company) for irony-mode.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package company-irony
-       :ensure t
-       :config
-       (setq company-backends (remove 'company-clang company-backends))
-       (add-to-list 'company-backends 'company-irony)
-       ;; (push '(company-irony :with company-yasnippet) company-backends)
-     )
-
-   #+end_src
-
-   Flycheck for irony-mode.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package flycheck-irony
-       :ensure t
-       :config
-       (eval-after-load 'flycheck
-       '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
-
-   #+end_src
-
-   Eldoc support for irony-mode.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package irony-eldoc
-       :ensure t
-       ;;:delight eldoc-mode
-       :config
-       (add-hook 'irony-mode-hook 'irony-eldoc))
-
-   #+end_src
-
 ** company-c-headers
 
    Company completion for c- and c++-headers.
@@ -1092,84 +1031,7 @@
        :ensure
        :commands lsp-ui-mode)
 
-     (use-package company-lsp
-       :ensure
-       :commands company-lsp)
-
    #+END_SRC
-
-** cquery
-
-   #+BEGIN_SRC emacs-lisp :tangle yes
-
-     (defun cquery//enable ()
-       (condition-case nil
-           (progn
-             (direnv-update-directory-environment)
-             (lsp))
-         (user-error nil)))
-
-     (use-package cquery
-       :ensure
-       :demand
-       :commands lsp
-       :hook ((c-mode . cquery//enable)
-              (c++-mode . cquery//enable))
-       :config (progn
-                 (setq cquery-sem-highlight-method 'font-lock)
-                 (setq company-transformers nil)
-                 (setq company-lsp-async t)
-                 (setq company-lsp-cache-candidates nil)))
-     ;; Also see lsp-project-whitelist lsp-project-blacklist cquery-root-matchers
-
-   #+END_SRC
-
-** RTags
-
-   #+begin_src emacs-lisp :tangle no
-
-     (defun rtags-tooltip-mouse-motion (event)
-       "Command handler for mouse movement events in `global-map'."
-       (interactive "e")
-       (tooltip-hide)
-       (when (car (mouse-pixel-position))
-         (setq tooltip-last-mouse-motion-event (copy-sequence event))
-         (tooltip-start-delayed-tip)))
-
-     (use-package rtags
-       :ensure t
-       :demand
-       :bind (:map c-mode-base-map (("C-c n" . rtags-next-match)
-                                    ("C-c p" . rtags-previous-match)
-                                    ([mouse-movement] . rtags-tooltip-mouse-motion)))
-       :config (progn (setq rtags-display-summary-as-tooltip t)
-                      (rtags-set-periodic-reparse-timeout 3)
-                      (rtags-enable-standard-keybindings)
-                      (setq rtags-autostart-diagnostics t)
-                      (if rtags-display-summary-as-tooltip
-                        (add-hook 'c-mode-common-hook (lambda () (setq-local track-mouse t))))
-                      (rtags-diagnostics)))
-
-     (use-package ivy-rtags
-       :ensure t)
-
-     (use-package flycheck-rtags
-       :ensure t
-       :demand
-       :init (add-hook 'c-mode-common-hook (lambda ()
-                                             (flycheck-select-checker 'rtags)
-                                             (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-                                             (setq-local flycheck-check-syntax-automatically nil))))
-
-     (use-package company-rtags
-       :ensure t
-       :demand
-       :config (progn (setq rtags-completions-enabled t)
-                      (setq company-backends (remove 'company-semantic (remove 'company-clang company-backends)))
-                      (push 'company-rtags company-backends)
-                      (add-hook 'c-mode-common-hook (lambda () (setq-local completion-at-point-functions '(company-rtags-completion-at-point))))))
-
-   #+end_src
 
 ** CMake-IDE
 
@@ -1199,18 +1061,6 @@
        :ensure t
        :bind (:map emacs-lisp-mode-map
                    ("C-c e" . macrostep-expand)))
-
-   #+end_src
-
-** Python
-
-   #+begin_src emacs-lisp :tangle yes
-
-     (use-package elpy
-       :ensure
-       :hook (python-mode . elpy-mode)
-       :config (progn
-                 (elpy-enable)))
 
    #+end_src
 
