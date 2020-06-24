@@ -1253,7 +1253,7 @@
        :ensure t
        :config (progn
                  (setq weechat-auto-close-buffers t)
-                 (setq weechat-auto-monitor-buffers '("#flummon" "#vikings" "#sparvnastet" "#ix" "#suga" "#nixos" "#nixos-chat"))
+                 (setq weechat-auto-monitor-buffers '("#flummon" "#vikings" "#sparvnastet" "#ix" "#suga" "#nixos" "#nixos-chat" "#nixos-dev" "#nixos-emacs" ))
                  (setq weechat-auto-monitor-new-buffers (quote t))
                  (setq weechat-auto-move-cursor-to-prompt nil)
                  (setq weechat-auto-recenter nil)
