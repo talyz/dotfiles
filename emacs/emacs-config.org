@@ -312,16 +312,9 @@
 
    #+begin_src emacs-lisp :tangle yes
 
-     (defun update-prettify-alist ()
-       (push '(">=" . (?\s (Br . Bl) ?\s (Bc . Bc) ?≥)) prettify-symbols-alist)
-       (push '("<=" . (?\s (Br . Bl) ?\s (Bc . Bc) ?≤)) prettify-symbols-alist)
-       (push '("->" . (?\s (Br . Bl) ?\s (Bc . Bc) ?→)) prettify-symbols-alist)
-       (push '("::" . (?\s (Br . Bl) ?\s (Bc . Bc) ?∷)) prettify-symbols-alist))
-
      (use-package prog-mode
        :config
        (global-prettify-symbols-mode 1)
-       (add-hook 'c++-mode-hook 'update-prettify-alist)
        (setq prettify-symbols-unprettify-at-point 'right-edge))
 
    #+end_src
