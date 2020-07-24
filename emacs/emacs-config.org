@@ -919,7 +919,6 @@
    #+begin_src emacs-lisp :tangle yes
 
      (use-package gdb-mi
-       :ensure t
        :config (progn
                  ;; use gdb-many-windows by default
                  (setq gdb-many-windows t)
