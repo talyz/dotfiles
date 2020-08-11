@@ -465,20 +465,6 @@
 
    #+end_src
 
-** Sr-Speedbar
-
-   #+begin_src emacs-lisp :tangle yes
-
-     (use-package sr-speedbar
-       :ensure t
-       :config
-       (setq sr-speedbar-right-side nil)
-       (setq sr-speedbar-auto-refresh nil)
-       (setq speedbar-show-unknown-files t)
-       (remove-hook 'speedbar-timer-hook 'sr-speedbar-refresh))
-
-   #+end_src
-
 ** Projectile
 
    #+begin_src emacs-lisp :tangle yes
@@ -508,8 +494,6 @@
 
      (use-package treemacs
        :ensure t
-       :init (with-eval-after-load 'winum
-               (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
        :config (progn
                  (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
                        treemacs-deferred-git-apply-delay      0.5
@@ -569,7 +553,7 @@
                    ("M-t" . treemacs-select-window)
                    ("1"   . treemacs-delete-other-windows)
                    ("t"   . treemacs)
-                   ("M-b"   . treemacs-bookmark)
+                   ("M-b" . treemacs-bookmark)
                    ("M-f" . treemacs-find-file)
                    ("C-t" . treemacs-find-tag)))
 

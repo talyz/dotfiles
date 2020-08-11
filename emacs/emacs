@@ -2,12 +2,6 @@
 ;; folding. This is the bootstrap file; it does the bare minimum
 ;; before converting and bytecompiling the main configuration file.
 
-;; Load ELPA sources and initialize. This is needed for later
-;; configuration of packages.
-(setq package-archives
-	      '(("gnu" . "https://elpa.gnu.org/packages/")
-		("melpa" . "https://melpa.org/packages/")))
-
 (setq package-enable-at-startup nil)
 
 (let ((gc-cons-threshold (* 50 1000 1000))
@@ -15,13 +9,6 @@
       (file-name-handler-alist nil))
 
   (package-initialize)
-
-  ;; use-package needs to be installed before bytecompiling the
-  ;; org-babel config file.
-  (unless (package-installed-p 'use-package)
-    (progn
-      (package-refresh-contents)
-      (package-install 'use-package)))
 
   (require 'use-package)
   (setq use-package-always-defer t)
