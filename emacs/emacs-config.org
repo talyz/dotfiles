@@ -1170,7 +1170,9 @@
        :bind-keymap ("M-l" . lsp-command-map)
        :hook (lsp-mode . (lambda ()
                            (let ((lsp-keymap-prefix "M-l"))
-                             (lsp-enable-which-key-integration)))))
+                             (lsp-enable-which-key-integration))))
+       :commands (lsp lsp-deferred)
+       :hook ((python-mode c-mode-common go-mode) . lsp-deferred))
 
      (use-package lsp-ui
        :ensure
@@ -1251,6 +1253,22 @@
 
      (use-package alchemist
        :ensure t)
+
+   #+end_src
+
+** Go
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package go-mode
+       :ensure
+       :config
+       ;; Set up before-save hooks to format buffer and add/delete imports.
+       ;; Make sure you don't have other gofmt/goimports hooks enabled.
+       (defun lsp-go-install-save-hooks ()
+         (add-hook 'before-save-hook #'lsp-format-buffer t t)
+         (add-hook 'before-save-hook #'lsp-organize-imports t t))
+       (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
    #+end_src
 
