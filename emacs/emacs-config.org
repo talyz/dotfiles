@@ -433,6 +433,7 @@
      (setq calendar-week-start-day 1)
 
    #+end_src
+
 ** Always close temporary buffers
 
    Close the buffer when quit-window is called, instead of burying
@@ -772,6 +773,7 @@
        :ensure t
        :demand
        :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+
    #+end_src
 
 ** Hungry delete
@@ -1165,7 +1167,10 @@
 
      (use-package lsp-mode
        :ensure
-       :commands lsp)
+       :bind-keymap ("M-l" . lsp-command-map)
+       :hook (lsp-mode . (lambda ()
+                           (let ((lsp-keymap-prefix "M-l"))
+                             (lsp-enable-which-key-integration)))))
 
      (use-package lsp-ui
        :ensure
