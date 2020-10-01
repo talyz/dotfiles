@@ -399,13 +399,15 @@
      (save-place-mode t)
 
    #+end_src
+
 ** Disable the start screen
 
-#+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle yes
 
-  (setq-default inhibit-startup-screen t)
+     (setq-default inhibit-startup-screen t)
 
-#+end_src
+   #+end_src
+
 ** Set org-mode as the default mode for the scratch buffer
 
    #+begin_src emacs-lisp :tangle no
@@ -438,9 +440,22 @@
 
    #+begin_src emacs-lisp :tangle yes
 
-     (advice-add 'quit-window
-                 :around (lambda (orig-fun &rest r)
-                           (apply orig-fun '(t))))
+     (defun quit-window (&optional kill window)
+       "Quit WINDOW and kill the buffer instead of burying it,
+     regardless of the value of `kill'.
+
+     This calls the function `quit-restore-window' to delete WINDOW or
+     show some other buffer in it.  See Info node `(elisp) Quitting
+     Windows' for more details.
+
+     The functions in `quit-window-hook' will be run before doing
+     anything else."
+       (interactive "P")
+       ;; Run the hook from the buffer implied to get any buffer-local
+       ;; values.
+       (with-current-buffer (window-buffer (window-normalize-window window))
+         (run-hooks 'quit-window-hook))
+       (quit-restore-window window 'kill))
 
    #+end_src
 
@@ -770,6 +785,17 @@
 
    #+end_src
 
+** which-key
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package which-key
+       :ensure
+       :demand
+       :config (which-key-mode 1))
+
+   #+end_src
+
 
 * Security
 
@@ -819,6 +845,7 @@
        (add-hook 'yaml-mode-hook 'ansible-doc-mode))
 
    #+end_src
+
 
 
 
