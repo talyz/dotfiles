@@ -172,15 +172,7 @@
        :config (progn
                  ;;(setq vdiff-auto-refine t)
                  (setq vdiff-default-refinement-syntax-code "w_")
-                 (setq vdiff-subtraction-fill-char ? )
-                 (mapc (lambda (args)
-                         (face-spec-reset-face (car args))
-                         (apply 'set-face-attribute args))
-                       '((diff-changed nil :background "#4a4c58")
-                         (diff-refine-changed nil :foreground "#ee3333")
-                         (diff-added nil :background "#283a36")
-                         (diff-refine-added nil :background "#285a36" :weight bold)
-                         (vdiff-closed-fold-face nil :foreground "#989a96" :background "#383a56")))))
+                 (setq vdiff-subtraction-fill-char ? )))
 
      (use-package vdiff-magit
        :ensure t
