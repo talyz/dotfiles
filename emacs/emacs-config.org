@@ -79,7 +79,6 @@
 
      (use-package yasnippet
        :ensure
-       ;;:delight yas-minor-mode
        :config (yas-global-mode 1))
 
      (use-package yasnippet-snippets
@@ -472,15 +471,6 @@
 
    #+end_src
 
-** Delight
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package delight
-       :ensure t)
-
-   #+end_src
-
 ** Projectile
 
    #+begin_src emacs-lisp :tangle yes
@@ -488,7 +478,6 @@
      (use-package projectile
        :ensure t
        :bind-keymap ("C-c p" . projectile-command-map)
-       ;;:delight '(:eval (concat " " (projectile-project-name)))
        :config (progn
                  (setq projectile-completion-system 'ivy)
                  (projectile-mode 1)
@@ -629,42 +618,6 @@
 
    #+end_src
 
-** Helm
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package helm-mode
-       :ensure helm
-       ;;:delight helm-mode
-       :bind (("C-x C-f" . helm-find-files)
-              ("M-x" . helm-M-x)
-              ("C-x b" . helm-mini)
-              ("C-x C-b" . helm-mini)
-              ("M-y" . helm-show-kill-ring)
-              :map helm-map
-              ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
-              ("C-i" . helm-execute-persistent-action) ; make TAB work in terminal
-              ("C-z" . helm-select-action) ; list actions using C-z
-              )
-       :config (progn (helm-mode 1)
-                      (setq helm-split-window-in-side-p t)
-                      (setq helm-mode-fuzzy-match t)
-                      (setq helm-completion-in-region-fuzzy-match t)
-                      ;; (mapcar (lambda (args)
-                      ;;           (face-spec-reset-face (car args))
-                      ;;           (apply 'set-face-attribute args))
-                      ;;         '((helm-buffer-directory nil :foreground "blue")
-                      ;;           (helm-ff-directory nil :foreground "deep sky blue")
-                      ;;           (helm-ff-dotted-directory nil :foreground "gray")
-                      ;;           (helm-ff-dotted-symlink-directory nil :foreground "DarkOrange")
-                      ;;           (helm-ff-invalid-symlink nil :foreground "red")
-                      ;;           (helm-ff-prefix nil :foreground "yellow")
-                      ;;           (helm-source-header nil :foreground "gray84" :weight semi-bold :height 1.3)
-                      ;;           (helm-visible-mark nil :background "royal blue" :foreground "gray94")))
-                      ))
-
-   #+end_src
-
 ** Ivy
 
    #+begin_src emacs-lisp :tangle yes
@@ -674,7 +627,6 @@
 
      (use-package ivy
        :ensure t
-       ;;:delight ivy-mode
        :bind (([remap switch-to-buffer] . ivy-switch-buffer)
               ([remap list-buffers] . ivy-switch-buffer)
               :map ivy-minibuffer-map
@@ -783,24 +735,6 @@
 
    #+end_src
 
-** Ansible
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package company-ansible
-       :ensure t
-       :config
-       (push 'company-ansible company-backends))
-
-     (use-package ansible-doc
-       :ensure t
-       :config
-       (add-hook 'yaml-mode-hook 'ansible-doc-mode))
-
-   #+end_src
-
-
-
 
 * Programming
 ** Highlight parentheses
@@ -817,7 +751,6 @@
 
      (use-package highlight-symbol
        :ensure t
-       ;;:delight highlight-symbol-mode
        :hook (((python-mode emacs-lisp-mode nix-mode) . highlight-symbol-mode)
               ((python-mode emacs-lisp-mode nix-mode) . highlight-symbol-nav-mode))
        :config (progn (highlight-symbol-nav-mode)
@@ -838,7 +771,6 @@
      (use-package flycheck
        :ensure t
        :demand
-       ;;:delight flycheck-mode
        :config (progn (global-flycheck-mode)
                       (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
                       (setq-default flycheck-idle-change-delay 2)))
@@ -1032,7 +964,6 @@
    #+begin_src emacs-lisp :tangle yes
 
      (use-package paredit-mode
-       ;;:delight paredit-mode
        :ensure paredit
        :hook (emacs-lisp-mode eval-expression-minibuffer-setup ielm-mode lisp-mode lisp-interaction-mode scheme-mode))
 
