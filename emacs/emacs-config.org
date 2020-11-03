@@ -627,6 +627,7 @@
 
      (use-package ivy
        :ensure t
+       :demand
        :bind (([remap switch-to-buffer] . ivy-switch-buffer)
               ([remap list-buffers] . ivy-switch-buffer)
               :map ivy-minibuffer-map
@@ -637,14 +638,7 @@
        (setq ivy-count-format "(%d/%d) ")
        (setq ivy-wrap t)
        (setq ivy-height 20)
-       (ivy-mode 1)
-       ;; (setq ivy-re-builders-alist
-       ;;       '((swiper . ivy--regex-plus)
-       ;;         (t . ivy--regex-fuzzy)))
-       ;; (face-spec-reset-face 'ivy-current-match)
-       ;; (apply 'set-face-attribute '(ivy-current-match nil ;; :foreground "#c678dd"
-       ;;                                                :background "#48384c"))
-       (ivy-rich-mode 1))
+       (ivy-mode 1))
 
      (use-package swiper
        :ensure t
@@ -658,24 +652,26 @@
 
      (use-package counsel
        :ensure t
+       :demand
        :bind (([remap find-file] . counsel-find-file)
               ([remap execute-extended-command] . counsel-M-x)
               ([remap describe-function] . counsel-describe-function)
               ([remap describe-variable] . counsel-describe-variable)
               ([remap find-library] . counsel-find-library)
-              ("C-c r" . counsel-rg))
-       :config
-       (ivy-rich-mode 1)
-       (ivy-rich-mode 0)
-       (ivy-rich-mode 1))
+              ("C-c r" . counsel-rg)))
 
      (use-package ivy-rich
-       :ensure t)
+       :ensure t
+       :demand
+       :config (ivy-rich-mode 1))
 
      (use-package ivy-xref
        :ensure t
-       :demand
-       :init (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+       :commands (ivy-xref-show-defs ivy-xref-show-xrefs)
+       :init
+       (when (>= emacs-major-version 27)
+         (setq xref-show-definitions-function #'ivy-xref-show-defs))
+       (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
 
    #+end_src
 
