@@ -1033,9 +1033,7 @@
 
      (use-package dap-mode
        :ensure
-       :demand
        :config (progn
-                 (dap-mode 1)
                  (dap-ui-mode 1)
                  (require 'dap-lldb)
                  (require 'dap-python)))
