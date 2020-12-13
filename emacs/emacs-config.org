@@ -1122,8 +1122,15 @@
      (use-package elixir-mode
        :ensure t)
 
-     (use-package alchemist
-       :ensure t)
+     (setq lsp-clients-elixir-server-executable "elixir-ls")
+
+     (use-package inf-elixir
+       :demand
+       :bind (("C-c i i" . 'inf-elixir)
+              ("C-c i p" . 'inf-elixir-project)
+              ("C-c i l" . 'inf-elixir-send-line)
+              ("C-c i r" . 'inf-elixir-send-region)
+              ("C-c i b" . 'inf-elixir-send-buffer)))
 
    #+end_src
 
@@ -1441,6 +1448,7 @@
      (set-fontset-font "fontset-default" 'symbol "Twitter Color Emoji" nil 'prepend)
 
    #+end_src
+
 
 * Misc
 ** Elisp test snippets
