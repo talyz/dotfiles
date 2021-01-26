@@ -692,6 +692,13 @@
 
    #+end_src
 
+** Clean up trailing whitespace
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (add-hook 'before-save-hook 'whitespace-cleanup)
+
+   #+end_src
 
 * Security
 
