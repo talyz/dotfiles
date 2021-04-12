@@ -614,9 +614,6 @@
 
    #+begin_src emacs-lisp :tangle yes
 
-     (use-package flx
-       :ensure t)
-
      (use-package ivy
        :ensure t
        :demand
@@ -632,6 +629,7 @@
        (setq ivy-count-format "(%d/%d) ")
        (setq ivy-wrap t)
        (setq ivy-height 20)
+       (setq ivy-initial-inputs-alist nil)
        (ivy-mode 1))
 
      (use-package swiper
@@ -640,9 +638,6 @@
               ([remap isearch-backward] . swiper)
               ([remap isearch-forward-regexp] . swiper-all)
               ([remap isearch-backward-regexp] . swiper-all)))
-
-     (use-package ripgrep
-       :ensure t)
 
      (use-package counsel
        :ensure t
