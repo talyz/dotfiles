@@ -21,5 +21,11 @@ function fish_prompt --description 'Write out the prompt'
            set screen_title_escape ""
         end
 
-	printf '( %s  %s@%s  %s  %s %s %b) ' (set_color magenta)(prompt_pwd) (set_color green)$USER $__fish_prompt_hostname (set_color blue)$retstatus $smiley (set_color normal) $screen_title_escape
+        if fish_git_prompt >/dev/null
+           set git_prompt (fish_git_prompt)
+        else
+           set git_prompt ""
+        end
+
+        printf '( %s%s %s@%s  %s  %s %s) %b' (set_color magenta)(prompt_pwd) (set_color red)$git_prompt (set_color green)$USER $__fish_prompt_hostname (set_color blue)$retstatus $smiley (set_color normal) $screen_title_escape
 end
