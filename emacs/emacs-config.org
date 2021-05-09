@@ -1045,7 +1045,8 @@
                            (let ((lsp-keymap-prefix "M-l"))
                              (lsp-enable-which-key-integration))))
        :commands (lsp lsp-deferred)
-       :hook ((python-mode c-mode-common go-mode) . lsp-deferred))
+       :hook ((python-mode c-mode-common go-mode) . lsp-deferred)
+       :config (setq lsp-elixir-server-command '("elixir-ls")))
 
      (use-package lsp-ui
        :ensure
@@ -1123,8 +1124,6 @@
 
      (use-package elixir-mode
        :ensure t)
-
-     (setq lsp-clients-elixir-server-executable "elixir-ls")
 
      (use-package inf-elixir
        :demand
