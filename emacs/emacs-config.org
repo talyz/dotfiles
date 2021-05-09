@@ -214,6 +214,18 @@
 
 
 * Behaviour
+
+** Paste at point with middle-click
+
+   Instead of pasting the content to where the mouse points, paste it
+   where the point currently is.
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (setq mouse-yank-at-point t)
+
+   #+end_src
+
 ** Disable tool bar
 
    Disable the tool bar at the top - it takes up screen space and I
