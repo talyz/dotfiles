@@ -4,10 +4,10 @@
 
 (setq package-enable-at-startup nil)
 
-(let ((gc-cons-threshold (* 50 1000 1000))
-      (gc-cons-percentage 0.6)
-      (file-name-handler-alist nil))
+(setq gc-cons-threshold (* 100 1024 1024))
+(setq gc-cons-percentage 0.6)
 
+(let ((file-name-handler-alist nil))
   (package-initialize)
 
   (require 'use-package)
@@ -26,4 +26,3 @@
                      gcs-done)
             ;; (with-current-buffer "*scratch*" (mapcar #'(lambda (text) (insert text "\n")) (mapcar 'symbol-name features)))
             ))
-
