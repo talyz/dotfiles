@@ -1057,7 +1057,7 @@
                            (let ((lsp-keymap-prefix "M-l"))
                              (lsp-enable-which-key-integration))))
        :commands (lsp lsp-deferred)
-       :hook ((python-mode c-mode-common go-mode) . lsp-deferred)
+       :hook ((python-mode go-mode elixir-mode) . lsp-deferred)
        :config (setq lsp-elixir-server-command '("elixir-ls")))
 
      (use-package lsp-ui
@@ -1073,6 +1073,16 @@
        :commands lsp-treemacs-errors-list)
 
    #+END_SRC
+
+** ccls
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package ccls
+       :ensure
+       :hook ((c-mode-common) . lsp))
+
+   #+end_src
 
 ** CMake-IDE
 
