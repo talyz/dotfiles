@@ -13,3 +13,8 @@
 eval (direnv hook fish)
 
 set fish_greeting ""
+
+if status --is-interactive
+    abbr --add --global shell 'nix-shell --run fish -p'
+    abbr --add --global tmp 'cd (mktemp -d)'
+end
