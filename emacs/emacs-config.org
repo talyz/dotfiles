@@ -984,39 +984,6 @@
 
    #+end_src
 
-** Xah-Lookup
-
-   Search the web for term under point.
-
-   #+begin_src emacs-lisp :tangle yes
-
-     (use-package xah-lookup
-       :ensure t
-       :bind (:map c++-mode-map
-                   ("C-c b" . xah-lookup-boost)
-                   ("C-c d" . xah-lookup-cppreference))
-       :config
-       ;; Uncomment the below line to use eww (Emacs Web Wowser)
-       ;; (setq xah-lookup-browser-function 'eww)
-       (defun xah-lookup-cppreference (&optional word)
-         "Lookup definition of current word or text selection in URL."
-         (interactive)
-         (xah-lookup-word-on-internet
-          word
-          ;; Use word02051 as a placeholder in the query URL.
-          "http://en.cppreference.com/mwiki/index.php?search=word02051"
-          xah-lookup-browser-function))
-
-       ;; Another example with http://www.boost.org
-       (defun xah-lookup-boost (&optional word)
-         (interactive)
-         (xah-lookup-word-on-internet
-          word
-          "https://cse.google.com/cse?cx=011577717147771266991:jigzgqluebe&q=word02051"
-          xah-lookup-browser-function)))
-
-   #+end_src
-
 ** company-c-headers
 
    Company completion for c- and c++-headers.
