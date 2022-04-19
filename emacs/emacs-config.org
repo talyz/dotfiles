@@ -1445,7 +1445,7 @@
        :config
        (add-to-list 'company-backends 'company-emoji))
 
-     (set-fontset-font "fontset-default" 'symbol "Twitter Color Emoji" nil 'prepend)
+     (set-fontset-font "fontset-default" 'symbol "Noto Color Emoji" nil 'prepend)
 
    #+end_src
 
