@@ -203,6 +203,7 @@
 
                  ;; Only use two buffers (working file and index) for vdiff-magit-stage
                  (setq vdiff-magit-stage-is-2way t))
+
    #+END_SRC
 
 ** vterm
@@ -467,18 +468,6 @@
 
    #+end_src
 
-** Winner
-
-   Enable winner-mode which lets us undo and redo window configuration
-   changes with C-c <left> (undo) and C-c <right> (redo).
-
-   #+begin_src emacs-lisp :tangle yes
-
-     (when (fboundp 'winner-mode)
-       (winner-mode 1))
-
-   #+end_src
-
 ** Projectile
 
    #+begin_src emacs-lisp :tangle yes
@@ -718,6 +707,7 @@
      (setq recentf-max-saved-items 2000)
 
    #+end_src
+
 
 * Security
 
