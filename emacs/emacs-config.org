@@ -1152,6 +1152,21 @@
 
    #+end_src
 
+** tree-sitter
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package tree-sitter
+       :ensure
+       :demand
+       :config
+       (global-tree-sitter-mode)
+       (add-hook 'tree-sitter-mode-hook 'tree-sitter-hl-mode))
+
+     (use-package tree-sitter-langs
+       :ensure)
+
+   #+end_src
 
 * Data
 ** Org-mode
