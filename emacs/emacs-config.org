@@ -112,7 +112,9 @@
        :ensure t
        :demand
        :bind ("C-M--" . undo-tree-switch-branch)
-       :config (global-undo-tree-mode))
+       :config (progn
+                 (global-undo-tree-mode)
+                 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))))
 
    #+end_src
 
