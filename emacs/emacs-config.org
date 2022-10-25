@@ -1152,6 +1152,16 @@
 
    #+end_src
 
+** PHP
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package php-mode
+       :ensure
+       :config (setq php-mode-lineup-cascaded-calls t))
+
+   #+end_src
+
 ** tree-sitter
 
    #+begin_src emacs-lisp :tangle yes
