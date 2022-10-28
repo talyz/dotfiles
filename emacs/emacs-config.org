@@ -1168,6 +1168,7 @@
 
    #+end_src
 
+
 * Data
 ** Org-mode
 
@@ -1329,6 +1330,7 @@
                  (setq weechat-modules (quote (weechat-button weechat-complete)))
                  (setq weechat-password-callback (quote weechat-secrets-get-password))
                  (setq weechat-port-default 8003)
+                 (setq weechat-more-lines-amount 200)
                  (add-hook 'weechat-mode-hook (lambda ()
                                                 (setq truncate-lines nil)))
                  (add-to-list 'company-begin-commands 'weechat-self-insert-command)))
