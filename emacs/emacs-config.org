@@ -1243,6 +1243,9 @@
        :ensure t
        :hook (org-mode . org-bullets-mode))
 
+     (use-package ox-reveal
+       :ensure t)
+
    #+end_src
 
 *** Workarounds
