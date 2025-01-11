@@ -119,9 +119,10 @@
      (use-package undo-tree
        :ensure t
        :demand
-       :bind ("C-M--" . undo-tree-switch-branch)
        :config (progn
                  (global-undo-tree-mode)
+                 (setq undo-tree-auto-save-history nil)
+                 (define-key undo-tree-map (kbd "C-/") nil)
                  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))))
 
    #+end_src
