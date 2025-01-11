@@ -235,6 +235,35 @@
 
    #+END_SRC
 
+** tree-sitter
+
+   #+begin_src emacs-lisp :tangle no
+
+     (use-package tree-sitter
+       :ensure
+       :demand
+       :config
+       (global-tree-sitter-mode)
+       (add-hook 'tree-sitter-mode-hook 'tree-sitter-hl-mode))
+
+     (use-package tree-sitter-langs
+       :ensure)
+
+   #+end_src
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (require 'treesit)
+     (setq major-mode-remap-alist
+           '((yaml-mode . yaml-ts-mode)
+             (bash-mode . bash-ts-mode)
+             (js-mode . js-ts-mode)
+             (js-json-mode . json-ts-mode)
+             (css-mode . css-ts-mode)
+             (python-mode . python-ts-mode)))
+
+   #+end_src
+
 
 * Behaviour
 
@@ -1188,22 +1217,6 @@
      (use-package php-mode
        :ensure
        :config (setq php-mode-lineup-cascaded-calls t))
-
-   #+end_src
-
-** tree-sitter
-
-   #+begin_src emacs-lisp :tangle yes
-
-     (use-package tree-sitter
-       :ensure
-       :demand
-       :config
-       (global-tree-sitter-mode)
-       (add-hook 'tree-sitter-mode-hook 'tree-sitter-hl-mode))
-
-     (use-package tree-sitter-langs
-       :ensure)
 
    #+end_src
 
