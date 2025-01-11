@@ -215,6 +215,17 @@
 
    #+END_SRC
 
+** delta
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package magit-delta
+       :ensure t
+       :hook (magit-mode . magit-delta-mode)
+       :config (setq magit-delta-delta-args '("--max-line-distance" "0.6" "--color-only" "--true-color" "never")))
+
+   #+end_src
+
 ** vterm
 
    #+BEGIN_SRC emacs-lisp :tangle yes
