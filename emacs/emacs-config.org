@@ -1,26 +1,6 @@
 #+TITLE: Talyz' Emacs Config
 
 * Initialization
-** Package sources and init
-
-   Add MELPA and the https version of elpa to the package sources,
-   then initialize.
-
-   This should preferrably be done in the init-file,
-   before this file is loaded, to allow for byte-compiling.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (require 'package)
-     (setq-default package-archives
-                   '(("gnu" . "https://elpa.gnu.org/packages/")
-                     ("melpa" . "https://melpa.org/packages/")))
-
-     (setq-default package-enable-at-startup nil)
-     (package-initialize)
-
-   #+end_src
-
 ** Set up use-package, install if missing
 
    use-package is a handy macro for keeping track of installed
@@ -33,12 +13,40 @@
 
    #+begin_src emacs-lisp :tangle no
 
+     (package-initialize)
+
      (unless (package-installed-p 'use-package)
        (progn
          (package-refresh-contents)
          (package-install 'use-package)))
 
      (require 'use-package)
+
+   #+end_src
+
+** Init and use-package config
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (setq gc-cons-threshold (* 100 1024 1024))
+     (run-with-idle-timer 5 t (lambda () (garbage-collect)))
+
+     (setq package-enable-at-startup nil)
+
+     (require 'use-package)
+     (setq use-package-always-defer t)
+     (setq use-package-verbose t)
+     (setq vc-follow-symlinks nil)
+
+     (add-hook 'emacs-startup-hook
+               (lambda ()
+                 (message "Emacs ready in %s with %d garbage collections."
+                          (format "%.2f seconds"
+                                  (float-time
+                                   (time-subtract after-init-time before-init-time)))
+                          gcs-done)
+                 ;; (with-current-buffer "*scratch*" (mapcar #'(lambda (text) (insert text "\n")) (mapcar 'symbol-name features)))
+                 ))
 
    #+end_src
 
