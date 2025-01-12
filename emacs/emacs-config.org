@@ -954,7 +954,7 @@
 
 ** GDB
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (use-package gdb-mi
        :config (progn
@@ -1087,32 +1087,6 @@
 
    #+end_src
 
-** company-c-headers
-
-   Company completion for c- and c++-headers.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package company-c-headers
-       :ensure t
-       :config
-       (add-to-list 'company-backends 'company-c-headers)
-       (add-to-list 'company-c-headers-path-system "/usr/include/c++/6.3.1/"))
-
-   #+end_src
-
-** RealGUD
-
-   A extensible, modular GNU Emacs front-end for interacting with
-   external debuggers.
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package realgud
-       :ensure t)
-
-   #+end_src
-
 ** dap-mode
 
    #+BEGIN_SRC emacs-lisp :tangle yes
@@ -1120,9 +1094,21 @@
      (use-package dap-mode
        :ensure
        :config (progn
-                 (dap-ui-mode 1)
                  (require 'dap-lldb)
-                 (require 'dap-python)))
+                 (require 'dap-python)
+                 (require 'dap-cpptools)
+                 (dap-ui-mode 1)
+                 ;; enables mouse hover support
+                 (dap-tooltip-mode 1)
+                 ;; use tooltips for mouse hover
+                 ;; if it is not enabled `dap-mode' will use the minibuffer.
+                 (tooltip-mode 1)
+                 ;; displays floating panel with debug buttons
+                 ;; requies emacs 26+
+                 (dap-ui-controls-mode 1)
+                 (setq dap-default-terminal-kind "external")
+                 (setq dap-external-terminal '("foot" "-T" "{display}" "sh" "-c" "exec {command}"))
+                 (setq dap-cpptools-debug-program '("OpenDebugAD7"))))
 
    #+END_SRC
 
