@@ -875,7 +875,7 @@
 
 ** CC-Mode
 
-   #+begin_src emacs-lisp :tangle yes
+   #+begin_src emacs-lisp :tangle no
 
      (use-package cc-mode
        :defer t
@@ -906,6 +906,23 @@
                           (c-offsets-alist . ((innamespace . [0])))))
                       (c-add-style "my-cc-style" my-cc-style)
                       (setq c-default-style "my-cc-style")))
+
+   #+end_src
+
+** C-TS-Mode
+
+   #+begin_src emacs-lisp :tangle yes
+
+     (use-package c-ts-mode
+      :if (treesit-language-available-p 'c)
+      :custom
+      (c-ts-mode-indent-offset 4)
+      (c-ts-mode-indent-style 'bsd)
+      :init
+      ;; Remap the standard C/C++ modes
+      (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+      (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+      (add-to-list 'major-mode-remap-alist '(c-or-c++-mode . c-or-c++-ts-mode)))
 
    #+end_src
 
