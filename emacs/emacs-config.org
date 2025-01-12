@@ -1168,16 +1168,6 @@
 
    #+END_SRC
 
-** ccls
-
-   #+begin_src emacs-lisp :tangle yes
-
-     (use-package ccls
-       :ensure
-       :hook ((c-mode-common) . lsp))
-
-   #+end_src
-
 ** Macrostep
 
    macrostep is an Emacs minor mode for interactively stepping through
