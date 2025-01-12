@@ -939,9 +939,37 @@
 
    #+end_src
 
-** Compile
+** CMake Integration
 
    #+begin_src emacs-lisp :tangle yes
+
+     (defmacro cmake-integration-with-keys (keys)
+       `(use-package cmake-integration
+          :ensure t
+          :init
+          (require 'c-ts-mode)
+          (require 'python)
+          :bind (:map c-ts-base-mode-map ,@keys
+                 :map cmake-mode-map ,@keys
+                 :map python-ts-mode-map ,@keys)
+          :config
+          (setq cmake-integration-use-dap-for-debug t)))
+
+     (cmake-integration-with-keys
+      (([f5] . cmake-integration-debug-last-target)
+       ([C-f5] . cmake-integration-run-last-target)
+       ([f6] . cmake-integration-cmake-reconfigure)
+       ([C-f6] . cmake-integration-cmake-configure-with-preset)
+       ([f7] . cmake-integration-save-and-compile-last-target)
+       ([C-f7] . cmake-integration-save-and-compile)
+       ([f8] . cmake-integration-run-conan)
+       ))
+
+   #+end_src
+
+** Compile
+
+   #+begin_src emacs-lisp :tangle no
 
      (global-set-key (kbd "<f5>") (lambda ()
                                     (interactive)
@@ -1147,23 +1175,6 @@
      (use-package ccls
        :ensure
        :hook ((c-mode-common) . lsp))
-
-   #+end_src
-
-** CMake-IDE
-
-   #+begin_src emacs-lisp :tangle no
-
-     (use-package cmake-ide
-       :ensure t
-       :demand
-       :config
-       (setq cmake-ide-build-pool-use-persistent-naming t)
-       (let ((dir "~/.emacs.d/cmake-ide-build"))
-         (if (not (file-exists-p dir))
-             (make-directory dir t))
-         (setq cmake-ide-build-pool-dir dir))
-       (cmake-ide-setup))
 
    #+end_src
 
