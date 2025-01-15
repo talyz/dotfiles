@@ -1092,7 +1092,7 @@
 
 ** copilot
 
-  #+begin_src emacs-lisp :tangle yes
+  #+begin_src emacs-lisp :tangle no
 
     (use-package copilot
       :commands (copilot-mode)
